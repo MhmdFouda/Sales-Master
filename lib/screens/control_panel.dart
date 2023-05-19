@@ -1,18 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 
 class ControlPanel extends StatelessWidget {
   const ControlPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(
-          'Fouda Pharma',
-        ),
-      ),
-    );
+    return const ScaffoldPage();
   }
 }
