@@ -1,5 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/providers/product_service_provider.dart';
+import 'package:fouda_pharma/screens/all_products.dart';
+import 'package:fouda_pharma/widget/search.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -9,30 +13,20 @@ class HomePage extends StatelessWidget {
     return ScaffoldPage(
       header: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        child: SearchBar(
-          constraints: BoxConstraints(),
-          shape: MaterialStatePropertyAll(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(6),
-              ),
-            ),
-          ),
-          elevation: MaterialStatePropertyAll(0),
-          hintText: 'Search for products...',
-        ),
+        child: SerchBar(),
       ),
-      content: Container(
-        margin: const EdgeInsets.only(
-          left: 15,
-          right: 15,
-          bottom: 60,
-          top: 15,
-        ),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
-          borderRadius: BorderRadius.circular(6),
-        ),
+      bottomBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          FilledButton(
+            child: const Icon(FluentIcons.add),
+            onPressed: () {},
+          ),
+          FilledButton(
+            child: const Icon(FluentIcons.reset),
+            onPressed: () {},
+          ),
+        ],
       ),
     );
   }
