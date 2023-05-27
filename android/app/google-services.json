@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "228655808143",
+    "project_id": "fouda-pharma",
+    "storage_bucket": "fouda-pharma.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:228655808143:android:06babd63fa98cdd070bafa",
+        "android_client_info": {
+          "package_name": "com.fouda.fouda_pharma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "228655808143-72aqmkt720g2td4eqdfrv81g2512790g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjYL4z8RIp7I0yuz_b2cW-QpYj86pHgtk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "228655808143-72aqmkt720g2td4eqdfrv81g2512790g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

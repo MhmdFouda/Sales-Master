@@ -71,15 +71,13 @@ class _AddButtonState extends ConsumerState<AddButton> {
           Button(
             child: const Text('Save'),
             onPressed: () {
-              ref.read(
-                addProductProvider(
-                  Product(
-                    name: productNameController.text,
-                    price: double.parse(productPriceController.text),
-                    count: int.parse(productCountController.text),
-                  ),
-                ),
-              );
+              ref.read(dataBaseProvider.notifier).addProduct(
+                    Product(
+                      name: productNameController.text,
+                      price: double.parse(productPriceController.text),
+                      count: int.parse(productCountController.text),
+                    ),
+                  );
               Navigator.pop(context, 'User deleted file');
               // Delete file here
             },
