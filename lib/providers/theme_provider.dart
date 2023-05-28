@@ -1,12 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final themeProvider = StateNotifierProvider<ThemeData, ThemeMode>(
-  (ref) => ThemeData(),
-);
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class ThemeData extends StateNotifier<ThemeMode> {
-  ThemeData() : super(ThemeMode.dark);
+part 'theme_provider.g.dart';
+
+@riverpod
+class ThemeData extends _$ThemeData {
+  @override
+  ThemeMode build() {
+    return ThemeMode.dark;
+  }
 
   void changeTheme(bool isDark) {
     if (isDark) {

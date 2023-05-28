@@ -7,13 +7,13 @@ class SettingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMod = ref.watch(themeProvider);
+    final themeMod = ref.watch(themeDataProvider);
     return ScaffoldPage(
       content: Column(children: [
         ToggleSwitch(
           checked: themeMod == ThemeMode.dark,
           onChanged: (value) {
-            ref.read(themeProvider.notifier).changeTheme(value);
+            ref.read(themeDataProvider.notifier).changeTheme(value);
           },
         ),
       ]),

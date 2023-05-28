@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/product.dart';
 
-import 'package:fouda_pharma/providers/product_service_provider.dart';
+import 'package:fouda_pharma/providers/product_provider.dart';
+import 'package:fouda_pharma/providers/products.dart';
+import 'package:fouda_pharma/widget/product_tile.dart';
 
 class SerchBar extends ConsumerStatefulWidget {
   const SerchBar({
@@ -14,28 +16,9 @@ class SerchBar extends ConsumerStatefulWidget {
 }
 
 class _SerchBarState extends ConsumerState<SerchBar> {
-  List<Product> searchHistory = <Product>[];
-
-  Iterable<Widget> getHistoryList(SearchController controller) {
-    return searchHistory.map(
-      (Product product) => ListTile(
-        leading: const Icon(Icons.history),
-        title: Text(product.name),
-        trailing: IconButton(
-          icon: const Icon(Icons.call_missed),
-          onPressed: () {
-            controller.text = product.name;
-            controller.selection =
-                TextSelection.collapsed(offset: controller.text.length);
-          },
-        ),
-      ),
-    );
-  }
-
   Iterable<Widget> getSuggestions(SearchController controller) {
     final String input = controller.value.text.toLowerCase();
-    final products = ref.watch(dataBaseProvider);
+    final products = ref.watch(asyncProductsProvider);
 
     return products.when(
       data: (data) {
@@ -44,12 +27,9 @@ class _SerchBarState extends ConsumerState<SerchBar> {
                 (Product product) => product.name.toLowerCase().contains(input))
             .toList()
             .map(
-              (e) => ListTile(
-                title: Text(e.name),
-                onTap: () {
-                  controller.closeView(e.name);
-                  // handleSelection(filteredProduct);
-                },
+              (product) => ProductListTile(
+                controller: controller,
+                product: product,
               ),
             );
       },
@@ -64,8 +44,9 @@ class _SerchBarState extends ConsumerState<SerchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final allProducts = ref.watch(dataBaseProvider);
+    final allProducts = ref.watch(asyncProductsProvider);
     return SearchAnchor.bar(
+      viewElevation: 3,
       viewShape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(6),
@@ -81,28 +62,31 @@ class _SerchBarState extends ConsumerState<SerchBar> {
         ),
       ),
       constraints: const BoxConstraints(),
-      suggestionsBuilder: (BuildContext context, SearchController controller) {
+      suggestionsBuilder: (
+        BuildContext context,
+        SearchController controller,
+      ) {
         if (controller.text.isEmpty) {
-          if (searchHistory.isNotEmpty) {
-            return getHistoryList(controller);
-          }
           return allProducts.when(
             data: (data) {
               return data.map(
-                (e) => ListTile(
-                  title: Text(e.name),
-                  onTap: () {
-                    controller.closeView(e.name);
-                    // handleSelection(filteredProduct);
-                  },
+                (product) => ProductListTile(
+                  controller: controller,
+                  product: product,
                 ),
               );
             },
             error: (error, stackTrace) {
-              return [Text(error.toString())];
+              return [
+                Text(
+                  error.toString(),
+                ),
+              ];
             },
             loading: () {
-              return [const LinearProgressIndicator()];
+              return [
+                const LinearProgressIndicator(),
+              ];
             },
           );
         }

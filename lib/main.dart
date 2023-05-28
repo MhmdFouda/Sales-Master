@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
     return FluentApp(
       debugShowCheckedModeBanner: false,
       title: 'Fouda Pharma',
-      themeMode: ref.watch(themeProvider),
+      themeMode: ref.watch(themeDataProvider),
       theme: FluentThemeData(
         brightness: Brightness.light,
       ),

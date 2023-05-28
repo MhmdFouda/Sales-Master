@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/product.dart';
-import 'package:fouda_pharma/providers/product_service_provider.dart';
+import 'package:fouda_pharma/providers/product_provider.dart';
 
 class ControlPanel extends StatelessWidget {
   const ControlPanel({super.key});
@@ -31,7 +31,7 @@ class _AddButtonState extends ConsumerState<AddButton> {
   final productCountController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
+    return Button(
       child: const Text('Add Product'),
       onPressed: () => showContentDialog(context),
     );
@@ -71,7 +71,7 @@ class _AddButtonState extends ConsumerState<AddButton> {
           Button(
             child: const Text('Save'),
             onPressed: () {
-              ref.read(dataBaseProvider.notifier).addProduct(
+              ref.read(asyncProductsProvider.notifier).addProduct(
                     Product(
                       name: productNameController.text,
                       price: double.parse(productPriceController.text),

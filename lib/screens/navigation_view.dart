@@ -51,6 +51,7 @@ class _NavigationPageState extends State<NavigationPage> with WindowListener {
           displayMode: PaneDisplayMode.auto,
           items: items,
           footerItems: [
+            PaneItemSeparator(),
             PaneItem(
               icon: const Icon(
                 FluentIcons.settings,
@@ -95,6 +96,7 @@ class _NavigationPageState extends State<NavigationPage> with WindowListener {
 }
 
 List<NavigationPaneItem> items = [
+  PaneItemSeparator(),
   PaneItem(
     icon: const Icon(
       FluentIcons.home,
