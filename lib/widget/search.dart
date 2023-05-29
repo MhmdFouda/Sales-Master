@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/product.dart';
 
 import 'package:fouda_pharma/providers/product_provider.dart';
-import 'package:fouda_pharma/providers/products.dart';
 import 'package:fouda_pharma/widget/product_tile.dart';
 
 class SerchBar extends ConsumerStatefulWidget {

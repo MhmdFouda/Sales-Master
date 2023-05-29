@@ -47,7 +47,10 @@ class AllProductList extends ConsumerWidget {
               )
               .toList();
           return SingleChildScrollView(
-              child: DataTable(columns: columns, rows: rows));
+              child: DataTable(
+            columns: columns,
+            rows: rows,
+          ));
         },
         error: (error, stackTrace) => Text(
           error.toString(),

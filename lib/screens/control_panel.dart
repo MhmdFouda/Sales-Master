@@ -10,7 +10,13 @@ class ControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ScaffoldPage(
       content: Column(
-        children: [AddButton()],
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [AddButton(), AddButton()],
+          )
+        ],
       ),
     );
   }
