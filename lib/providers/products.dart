@@ -23,8 +23,40 @@ class OrderProductList extends _$OrderProductList {
     state = [];
   }
 
-  void addProduct(Product product) {
-    state = [...state, product];
+  void addProduct(Product product, int? count) {
+    // Check if the product already exists
+    bool productExists =
+        state.any((existingProduct) => existingProduct.id == product.id);
+    // int existingProductIndex =
+    //     state.indexWhere((existingProduct) => existingProduct.id == product.id);
+
+    if (!productExists) {
+      state = [...state, product];
+    } else {
+      // Product already exists,update it with new count
+
+      // List<Product> updatedState = [...state];
+      // updatedState[existingProductIndex] =
+      //     updatedState[existingProductIndex].copyWith(count: count);
+      state = [
+        for (final existingProduct in state)
+          if (existingProduct.id == product.id)
+            existingProduct.copyWith(count: count)
+          else
+            existingProduct,
+      ];
+    }
+  }
+
+  // update product count
+  void updateProductCount({required String? productId, required int? count}) {
+    state = [
+      for (final product in state)
+        if (product.id == productId)
+          product.copyWith(count: count)
+        else
+          product,
+    ];
   }
 
   void removeProduct(String productId) {

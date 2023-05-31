@@ -28,9 +28,7 @@ class ProductListTile extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return CountDialog(
-          product: product,
-        );
+        return CountDialog(product: product);
       },
     ).then((_) => controller.closeView(product.name));
   }

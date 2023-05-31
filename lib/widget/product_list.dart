@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/providers/products.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class ProductList extends ConsumerWidget {
   const ProductList({super.key});
@@ -11,28 +11,56 @@ class ProductList extends ConsumerWidget {
     final productList = ref.watch(orderProductListProvider);
 
     if (productList.isEmpty) {
-      return Center(
+      return const Center(
         child: Text(
           'Fouda Pharma',
-          style: GoogleFonts.lora(fontSize: 80),
+          style: TextStyle(
+            fontSize: 60,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       );
     } else {
-      return Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: productList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(productList[index].name),
-                  subtitle: Text(productList[index].price.toString()),
-                );
-              },
-            ),
-          ),
-        ],
+      return SingleChildScrollView(
+        child: SizedBox(
+          width: double.infinity,
+          child: DataTable(
+              columns: const [
+                DataColumn(label: Text('Product')),
+                DataColumn(label: Text('Count')),
+                DataColumn(label: Text('Price')),
+                DataColumn(label: Text('Total Price')),
+              ],
+              rows: productList.map((product) {
+                double totalPrice = product.count * product.price;
+                return DataRow(cells: [
+                  DataCell(
+                    Text(product.name),
+                  ),
+                  DataCell(
+                    NumberBox(
+                      clearButton: false,
+                      value: product.count,
+                      onChanged: (value) {
+                        ref
+                            .read(orderProductListProvider.notifier)
+                            .updateProductCount(
+                              productId: product.id,
+                              count: value,
+                            );
+                      },
+                      mode: SpinButtonPlacementMode.compact,
+                    ),
+                  ),
+                  DataCell(
+                    Text(product.price.toString()),
+                  ),
+                  DataCell(
+                    Text(totalPrice.toString()),
+                  ),
+                ]);
+              }).toList()),
+        ),
       );
     }
   }

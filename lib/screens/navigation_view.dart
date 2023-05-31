@@ -1,22 +1,24 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/screens/all_products.dart';
-import 'package:fouda_pharma/screens/client_page.dart';
-import 'package:fouda_pharma/screens/control_panel.dart';
+import 'package:fouda_pharma/screens/all_client_page.dart';
 import 'package:fouda_pharma/screens/history.dart';
 import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
 import 'package:window_manager/window_manager.dart';
 
-class NavigationPage extends StatefulWidget {
+class NavigationPage extends ConsumerStatefulWidget {
   const NavigationPage({super.key});
 
   @override
-  State<NavigationPage> createState() => _NavigationPageState();
+  ConsumerState<NavigationPage> createState() => _NavigationPageState();
 }
 
-class _NavigationPageState extends State<NavigationPage> with WindowListener {
+class _NavigationPageState extends ConsumerState<NavigationPage>
+    with WindowListener {
   final viewKey = GlobalKey<NavigationViewState>();
   int index = 0;
   @override
@@ -39,8 +41,28 @@ class _NavigationPageState extends State<NavigationPage> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
+    final themeMod = ref.watch(themeDataProvider);
     return NavigationView(
-      appBar: const NavigationAppBar(
+      appBar: NavigationAppBar(
+        title: const DragToMoveArea(
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text('Fouda Pharma'),
+          ),
+        ),
+        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Padding(
+            padding: const EdgeInsetsDirectional.only(end: 8.0),
+            child: ToggleSwitch(
+              content: const Text('Dark Mode'),
+              checked: themeMod == ThemeMode.dark,
+              onChanged: (value) {
+                ref.read(themeDataProvider.notifier).changeTheme(value);
+              },
+            ),
+          ),
+          const WindowButtons(),
+        ]),
         automaticallyImplyLeading: false,
       ),
       key: viewKey,
@@ -106,30 +128,41 @@ List<NavigationPaneItem> items = [
   ),
   PaneItem(
     icon: const Icon(
-      FluentIcons.add,
-    ),
-    title: const Text('Control Panel'),
-    body: const ControlPanel(),
-  ),
-  PaneItem(
-    icon: const Icon(
-      FluentIcons.people,
+      FluentIcons.contact,
     ),
     title: const Text('Client Panel'),
-    body: const ClientPage(),
+    body: const AllClientPage(),
   ),
   PaneItem(
     icon: const Icon(
-      FluentIcons.all_apps,
+      FluentIcons.product,
     ),
     title: const Text('All Products'),
     body: const AllProductList(),
   ),
   PaneItem(
     icon: const Icon(
-      FluentIcons.shop,
+      FluentIcons.history,
     ),
     title: const Text('Orders History'),
     body: const HistoryPage(),
   ),
 ];
+
+class WindowButtons extends StatelessWidget {
+  const WindowButtons({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final FluentThemeData theme = FluentTheme.of(context);
+
+    return SizedBox(
+      width: 138,
+      height: 50,
+      child: WindowCaption(
+        brightness: theme.brightness,
+        backgroundColor: Colors.transparent,
+      ),
+    );
+  }
+}

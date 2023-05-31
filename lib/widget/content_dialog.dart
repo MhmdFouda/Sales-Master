@@ -17,6 +17,12 @@ class CountDialog extends ConsumerStatefulWidget {
 class _DialogState extends ConsumerState<CountDialog> {
   final countController = TextEditingController();
   @override
+  void dispose() {
+    countController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ContentDialog(
       title: const Text('Count'),
@@ -28,12 +34,11 @@ class _DialogState extends ConsumerState<CountDialog> {
         Button(
           onPressed: () {
             ref.read(orderProductListProvider.notifier).addProduct(
-                  widget.product.copyWith(
-                    count: countController.text.isEmpty
-                        ? 1
-                        : int.parse(countController.text),
-                  ),
+                  widget.product
+                      .copyWith(count: int.parse(countController.text)),
+                  int.parse(countController.text),
                 );
+
             Navigator.of(context).pop();
           },
           child: const Text('OK'),

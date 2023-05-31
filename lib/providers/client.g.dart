@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'theme_provider.dart';
+part of 'client.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeDataHash() => r'32592f16d72ee5fe0ffbba67f7bcab661cffe57b';
+String _$asyncClientHash() => r'469c1d61fad9807bd16c95f5547ee0c6a4524786';
 
-/// See also [ThemeData].
-@ProviderFor(ThemeData)
-final themeDataProvider =
-    AutoDisposeNotifierProvider<ThemeData, ThemeMode>.internal(
-  ThemeData.new,
-  name: r'themeDataProvider',
+/// See also [AsyncClient].
+@ProviderFor(AsyncClient)
+final asyncClientProvider =
+    AutoDisposeAsyncNotifierProvider<AsyncClient, List<Client>>.internal(
+  AsyncClient.new,
+  name: r'asyncClientProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$themeDataHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$asyncClientHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ThemeData = AutoDisposeNotifier<ThemeMode>;
+typedef _$AsyncClient = AutoDisposeAsyncNotifier<List<Client>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

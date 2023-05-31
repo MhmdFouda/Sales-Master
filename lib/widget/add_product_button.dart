@@ -3,35 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 
-class ControlPanel extends StatelessWidget {
-  const ControlPanel({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const ScaffoldPage(
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [AddButton(), AddButton()],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class AddButton extends ConsumerStatefulWidget {
-  const AddButton({
+class AddProductButton extends ConsumerStatefulWidget {
+  const AddProductButton({
     super.key,
   });
 
   @override
-  ConsumerState<AddButton> createState() => _AddButtonState();
+  ConsumerState<AddProductButton> createState() => _AddProductButton();
 }
 
-class _AddButtonState extends ConsumerState<AddButton> {
+class _AddProductButton extends ConsumerState<AddProductButton> {
   final productNameController = TextEditingController();
   final productPriceController = TextEditingController();
   final productCountController = TextEditingController();

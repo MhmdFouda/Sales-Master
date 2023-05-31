@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firedart/firedart.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,8 +18,22 @@ class AsyncProducts extends _$AsyncProducts {
     return product.map((doc) => Product.fromSnapshot(doc)).toList();
   }
 
+  //get one product with id
+  Future<Product> getProduct(String id) async {
+    final productCollection = Firestore.instance.collection('products');
+    final product = await productCollection.document(id).get();
+    return Product.fromSnapshot(product);
+  }
+
   Future<Document> addProduct(Product product) async {
     final productCollection = Firestore.instance.collection('products');
     return productCollection.add(product.toMap());
   }
+
+  // update product
+  Future<void> updateProduct(Product product) async {
+    final productCollection = Firestore.instance.collection('products');
+    return productCollection.document(product.id!).update(product.toMap());
+  }
+  // delete product
 }

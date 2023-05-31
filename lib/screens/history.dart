@@ -5,6 +5,23 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ScaffoldPage();
+    return const ScaffoldPage(
+      header: Padding(
+        padding: EdgeInsets.all(30),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Orders History',
+                style: TextStyle(
+                  fontSize: 48,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

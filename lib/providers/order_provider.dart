@@ -18,7 +18,7 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
     return order.map((doc) => Order.fromSnapshot(doc)).toList();
   }
 
-  Future<void> saveToFirebase() async {
+  Future<void> addOrder() async {
     final products = ref.watch(orderProductListProvider);
     final totalprice =
         ref.watch(orderProductListProvider.notifier).totalPrice();
@@ -26,6 +26,8 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
         Order(products: products, clientName: '', totalPrice: totalprice);
     final collection = Firestore.instance.collection('orders');
     final orderData = order.toMap();
-    await collection.add(orderData);
+    final docRef = await collection.add(orderData);
+    final orderId = docRef.id;
+    await docRef.reference.update({'id': orderId});
   }
 }

@@ -1,9 +1,10 @@
-import 'package:firedart/firestore/firestore.dart';
+import 'package:firedart/firedart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:window_manager/window_manager.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
+import 'package:fouda_pharma/resources/preferences_store.dart';
 import 'package:fouda_pharma/screens/navigation_view.dart';
+import 'package:window_manager/window_manager.dart';
 
 // const appId = '1:228655808143:web:7d93af7de25a4f9a70bafa';
 const apiKey = 'AIzaSyCAFkGjCDiIAJxZVTcNGToCrUGVJgV94Aw';
@@ -13,12 +14,22 @@ const projectId = 'fouda-pharma';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  FirebaseAuth.initialize(apiKey, await PreferencesStore.create());
+
   Firestore.initialize(projectId);
-  windowManager.ensureInitialized();
-  windowManager.setTitle('Fouda Pharma');
-  windowManager.setBackgroundColor(Colors.transparent);
-  windowManager.center();
-  windowManager.show();
+  await WindowManager.instance.ensureInitialized();
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.setTitleBarStyle(
+      TitleBarStyle.hidden,
+      windowButtonVisibility: false,
+    );
+    await windowManager.setMinimumSize(const Size(1000, 720));
+    await windowManager.show();
+    await windowManager.setPreventClose(true);
+    await windowManager.setSkipTaskbar(false);
+    await windowManager.setMovable(true);
+  });
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -35,12 +46,8 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Fouda Pharma',
       themeMode: ref.watch(themeDataProvider),
-      theme: FluentThemeData(
-        brightness: Brightness.light,
-      ),
-      darkTheme: FluentThemeData(
-        brightness: Brightness.dark,
-      ),
+      theme: ref.watch(themeDataProvider.notifier).lightTheme(),
+      darkTheme: ref.watch(themeDataProvider.notifier).darkTheme(),
       home: const NavigationPage(),
     );
   }

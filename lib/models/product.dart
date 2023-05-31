@@ -47,24 +47,4 @@ class Product {
       count: doc['count'].toInt(),
     );
   }
-
-  @override
-  String toString() {
-    return 'Product(id: $id, name: $name, price: $price, count: $count)';
-  }
-
-  @override
-  bool operator ==(covariant Product other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.name == name &&
-        other.price == price &&
-        other.count == count;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^ name.hashCode ^ price.hashCode ^ count.hashCode;
-  }
 }
