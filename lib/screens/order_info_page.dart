@@ -1,17 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/models/order.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
-class ProductInfoPage extends ConsumerWidget {
-  const ProductInfoPage({
-    super.key,
-    required this.product,
-  });
-  final Product product;
+class OrderInfoPage extends ConsumerWidget {
+  const OrderInfoPage({super.key, required this.order});
+  final Order order;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final List<Product> orderProducts = order.products;
     return NavigationView(
       appBar: const NavigationAppBar(
         title: DragToMoveArea(
@@ -34,14 +34,14 @@ class ProductInfoPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    product.name,
+                    order.clientName,
                     style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'Price : ${product.price}',
+                    'Price : ${order.totalPrice}',
                     style: const TextStyle(
                       fontSize: 28,
                     ),
@@ -54,7 +54,7 @@ class ProductInfoPage extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  'Count : ${product.count}',
+                  ref.watch(dateFormaterProvider(order.confirmTime)),
                   style: const TextStyle(
                     fontSize: 28,
                   ),
@@ -63,23 +63,16 @@ class ProductInfoPage extends ConsumerWidget {
             ],
           ),
         ),
-        bottomBar: Padding(
+        content: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Button(
-                onPressed: () {},
-                child: const Text('Edit'),
-              ),
-              const SizedBox(
-                width: 20,
-              ),
-              Button(
-                onPressed: () {},
-                child: const Text('Delete'),
-              ),
-            ],
+          child: ListView.builder(
+            itemCount: orderProducts.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(orderProducts[index].name),
+                trailing: Text(orderProducts[index].price.toString()),
+              );
+            },
           ),
         ),
       ),

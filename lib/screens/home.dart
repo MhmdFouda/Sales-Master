@@ -1,10 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
-import 'package:fouda_pharma/widget/product_list.dart';
+import 'package:fouda_pharma/widget/add_client_button.dart';
+import 'package:fouda_pharma/widget/product_inorder_list.dart';
 import 'package:fouda_pharma/widget/search.dart';
+
+import '../widget/drop_down_client.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -29,23 +33,7 @@ class HomePage extends ConsumerWidget {
                   Button(
                     child: const Text("Confirm Order"),
                     onPressed: () {
-                      for (var product in productList) {
-                        ref
-                            .read(asyncProductsProvider.notifier)
-                            .getProduct(product.id!)
-                            .then(
-                              (asyncProduct) => ref
-                                  .read(asyncProductsProvider.notifier)
-                                  .updateProduct(
-                                    product.copyWith(
-                                      count: asyncProduct.count - product.count,
-                                    ),
-                                  ),
-                            );
-                      }
-                      ref.read(asyncOrderProviderProvider.notifier).addOrder();
-                      ref.read(orderProductListProvider.notifier).reset();
-                      confirmDialog(context);
+                      confirmDialog(context, ref, productList);
                     },
                   ),
                   Button(
@@ -67,19 +55,60 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Future<String?> confirmDialog(BuildContext context) {
+  Future<String?> confirmDialog(
+      BuildContext context, WidgetRef ref, List<Product> productList) {
     return showDialog(
       context: context,
       builder: (context) {
         return ContentDialog(
-          title: const Text("Order Confirmed"),
-          content: const Text("Your order has been confirmed"),
+          title: const Text("Confirm Order"),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Choese client"),
+              SizedBox(
+                height: 10,
+              ),
+              DropDownClient(),
+              SizedBox(
+                height: 10,
+              ),
+              Text("Or add New "),
+              SizedBox(
+                height: 10,
+              ),
+              AddClientButton(),
+            ],
+          ),
           actions: [
             Button(
               onPressed: () {
+                for (var product in productList) {
+                  ref
+                      .read(asyncProductsProvider.notifier)
+                      .getProduct(product.id!)
+                      .then(
+                        (asyncProduct) => ref
+                            .read(asyncProductsProvider.notifier)
+                            .updateProduct(
+                              product.copyWith(
+                                count: asyncProduct.count - product.count,
+                              ),
+                            ),
+                      );
+                }
+                ref.read(asyncOrderProviderProvider.notifier).addOrder();
+                ref.read(orderProductListProvider.notifier).reset();
                 Navigator.of(context).pop();
               },
-              child: const Text("OK"),
+              child: const Text("Confirm"),
+            ),
+            Button(
+              child: const Text("Cansel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             )
           ],
         );

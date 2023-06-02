@@ -56,17 +56,26 @@ class AllProductList extends ConsumerWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 6.0, horizontal: 28),
-                child: Card(
-                  padding: const EdgeInsets.all(0),
-                  child: ListTile(
-                    onPressed: () {
-                      Navigator.of(context).push(FluentPageRoute(
-                        builder: (context) =>
-                            ProductInfoPage(product: data[index]),
-                      ));
-                    },
-                    title: Text(data[index].name),
-                    trailing: Text(data[index].count.toString()),
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(
+                        color: FluentTheme.of(context).borderInputColor,
+                        width: 1.5),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(FluentPageRoute(
+                      builder: (context) =>
+                          ProductInfoPage(product: data[index]),
+                    ));
+                  },
+                  title: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(data[index].name),
+                  ),
+                  trailing: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(data[index].count.toString()),
                   ),
                 ),
               );

@@ -10,6 +10,8 @@ class AsyncClient extends _$AsyncClient {
     return _fetchClient();
   }
 
+  // cashed the data
+
   Future<List<Client>> _fetchClient() async {
     final clientCollection = Firestore.instance.collection('clients');
     final client = await clientCollection.get();

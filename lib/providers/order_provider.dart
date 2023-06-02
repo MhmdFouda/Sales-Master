@@ -19,15 +19,31 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
   }
 
   Future<void> addOrder() async {
+    final clientName = ref.watch(clientNameProvider);
     final products = ref.watch(orderProductListProvider);
     final totalprice =
         ref.watch(orderProductListProvider.notifier).totalPrice();
-    final order =
-        Order(products: products, clientName: '', totalPrice: totalprice);
+    final order = Order(
+        products: products,
+        clientName: clientName ?? '',
+        totalPrice: totalprice);
     final collection = Firestore.instance.collection('orders');
     final orderData = order.toMap();
     final docRef = await collection.add(orderData);
     final orderId = docRef.id;
     await docRef.reference.update({'id': orderId});
+  }
+}
+
+@riverpod
+class ClientName extends _$ClientName {
+  @override
+  String? build() {
+    return null;
+  }
+
+  // change state
+  void changeClientName(String name) {
+    state = name;
   }
 }

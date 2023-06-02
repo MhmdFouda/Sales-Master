@@ -7,7 +7,7 @@ part of 'order_provider.dart';
 // **************************************************************************
 
 String _$asyncOrderProviderHash() =>
-    r'1e6e81ee636fb6f500b2f933204596c67ba9ab00';
+    r'9377c78a395e47c5643b89c00042806d693f5429';
 
 /// See also [AsyncOrderProvider].
 @ProviderFor(AsyncOrderProvider)
@@ -23,4 +23,19 @@ final asyncOrderProviderProvider =
 );
 
 typedef _$AsyncOrderProvider = AutoDisposeAsyncNotifier<List<Order>>;
+String _$clientNameHash() => r'2fdd53e359e5c0923a835e1b61e6aa1ef91dd376';
+
+/// See also [ClientName].
+@ProviderFor(ClientName)
+final clientNameProvider =
+    AutoDisposeNotifierProvider<ClientName, String?>.internal(
+  ClientName.new,
+  name: r'clientNameProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$clientNameHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ClientName = AutoDisposeNotifier<String?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

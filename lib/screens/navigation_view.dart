@@ -8,6 +8,7 @@ import 'package:fouda_pharma/screens/all_client_page.dart';
 import 'package:fouda_pharma/screens/history.dart';
 import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
+import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {
@@ -148,21 +149,3 @@ List<NavigationPaneItem> items = [
     body: const HistoryPage(),
   ),
 ];
-
-class WindowButtons extends StatelessWidget {
-  const WindowButtons({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final FluentThemeData theme = FluentTheme.of(context);
-
-    return SizedBox(
-      width: 138,
-      height: 50,
-      child: WindowCaption(
-        brightness: theme.brightness,
-        backgroundColor: Colors.transparent,
-      ),
-    );
-  }
-}

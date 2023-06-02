@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/widget/content_dialog.dart';

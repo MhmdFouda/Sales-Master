@@ -56,16 +56,25 @@ class AllClientPage extends ConsumerWidget {
                 horizontal: 28.0,
                 vertical: 6,
               ),
-              child: Card(
-                padding: const EdgeInsets.all(0),
-                child: ListTile(
-                  onPressed: () {
-                    Navigator.of(context).push(FluentPageRoute(
-                      builder: (context) => ClientInfoPage(client: data[index]),
-                    ));
-                  },
-                  title: Text(data[index].name),
-                  leading: const Icon(FluentIcons.contact),
+              child: ListTile(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                      color: FluentTheme.of(context).borderInputColor,
+                      width: 1.5),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(FluentPageRoute(
+                    builder: (context) => ClientInfoPage(client: data[index]),
+                  ));
+                },
+                title: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text(data[index].name),
+                ),
+                leading: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Icon(FluentIcons.contact),
                 ),
               ),
             );

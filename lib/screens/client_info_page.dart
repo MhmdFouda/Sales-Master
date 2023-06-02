@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/client.dart';
-import 'package:fouda_pharma/screens/navigation_view.dart';
+import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
 class ClientInfoPage extends ConsumerWidget {
@@ -69,6 +69,25 @@ class ClientInfoPage extends ConsumerWidget {
                     ),
                   ),
                 ),
+              ),
+            ],
+          ),
+        ),
+        bottomBar: Padding(
+          padding: const EdgeInsets.all(30.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Button(
+                onPressed: () {},
+                child: const Text('Edit'),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              Button(
+                onPressed: () {},
+                child: const Text('Delete'),
               ),
             ],
           ),
