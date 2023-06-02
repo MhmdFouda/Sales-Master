@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
@@ -7,7 +8,6 @@ import 'package:fouda_pharma/providers/products.dart';
 import 'package:fouda_pharma/widget/add_client_button.dart';
 import 'package:fouda_pharma/widget/product_inorder_list.dart';
 import 'package:fouda_pharma/widget/search.dart';
-
 import '../widget/drop_down_client.dart';
 
 class HomePage extends ConsumerWidget {
@@ -31,13 +31,15 @@ class HomePage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Button(
-                    child: const Text("Confirm Order"),
+                    //confirm order
+                    child: Text(context.loc.confirmorder),
                     onPressed: () {
                       confirmDialog(context, ref, productList);
                     },
                   ),
                   Button(
-                    child: const Text("Reset Order"),
+                    // reset order
+                    child: Text(context.loc.resetorder),
                     onPressed: () {
                       if (productList.isNotEmpty) {
                         ref.read(orderProductListProvider.notifier).reset();
@@ -45,7 +47,7 @@ class HomePage extends ConsumerWidget {
                     },
                   ),
                   Text(
-                    "Total Price :    $totalPrice  EGP",
+                    "${context.loc.totalorderprice}  :   $totalPrice  ${context.loc.egp}",
                     style: const TextStyle(fontSize: 20),
                   )
                 ],
@@ -61,24 +63,24 @@ class HomePage extends ConsumerWidget {
       context: context,
       builder: (context) {
         return ContentDialog(
-          title: const Text("Confirm Order"),
-          content: const Column(
+          title: Text(context.loc.confirmorder),
+          content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Choese client"),
-              SizedBox(
+              Text(context.loc.choseclient),
+              const SizedBox(
                 height: 10,
               ),
-              DropDownClient(),
-              SizedBox(
+              const DropDownClient(),
+              const SizedBox(
                 height: 10,
               ),
-              Text("Or add New "),
-              SizedBox(
+              Text(context.loc.newclient),
+              const SizedBox(
                 height: 10,
               ),
-              AddClientButton(),
+              const AddClientButton(),
             ],
           ),
           actions: [
@@ -102,10 +104,10 @@ class HomePage extends ConsumerWidget {
                 ref.read(orderProductListProvider.notifier).reset();
                 Navigator.of(context).pop();
               },
-              child: const Text("Confirm"),
+              child: Text(context.loc.confirm),
             ),
             Button(
-              child: const Text("Cansel"),
+              child: Text(context.loc.cansel),
               onPressed: () {
                 Navigator.of(context).pop();
               },

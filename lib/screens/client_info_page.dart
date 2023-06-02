@@ -17,7 +17,6 @@ class ClientInfoPage extends ConsumerWidget {
         title: DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Text('Fouda Pharma'),
           ),
         ),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [

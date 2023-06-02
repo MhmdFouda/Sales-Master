@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/screens/product_info_page.dart';
 import 'package:fouda_pharma/widget/add_product_button.dart';
@@ -13,25 +14,25 @@ class AllProductList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final products = ref.watch(asyncProductsProvider);
     return ScaffoldPage(
-      header: const Padding(
-        padding: EdgeInsets.all(30),
+      header: Padding(
+        padding: const EdgeInsets.all(30),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'Products',
-                    style: TextStyle(
+                    context.loc.products,
+                    style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                AddProductButton(),
+                const AddProductButton(),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             // AutoSuggestBox<Product>.form(

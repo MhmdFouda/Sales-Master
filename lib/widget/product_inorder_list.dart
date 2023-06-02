@@ -2,6 +2,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/products.dart';
 
 class ProductList extends ConsumerWidget {
@@ -26,11 +27,11 @@ class ProductList extends ConsumerWidget {
         child: SizedBox(
           width: double.infinity,
           child: DataTable(
-              columns: const [
-                DataColumn(label: Text('Product')),
-                DataColumn(label: Text('Count')),
-                DataColumn(label: Text('Price')),
-                DataColumn(label: Text('Total Price')),
+              columns: [
+                DataColumn(label: Text(context.loc.product)),
+                DataColumn(label: Text(context.loc.count)),
+                DataColumn(label: Text(context.loc.price)),
+                DataColumn(label: Text(context.loc.totalorderprice)),
               ],
               rows: productList.map((product) {
                 double totalPrice = product.count * product.price;

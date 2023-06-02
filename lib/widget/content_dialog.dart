@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/products.dart';
 
@@ -19,7 +20,7 @@ class _DialogState extends ConsumerState<CountDialog> {
   Widget build(BuildContext context) {
     int count = 1;
     return ContentDialog(
-      title: const Text('Count'),
+      title: Text(context.loc.count),
       content: NumberBox(
         clearButton: false,
         value: count,
@@ -40,7 +41,7 @@ class _DialogState extends ConsumerState<CountDialog> {
 
             Navigator.of(context).pop();
           },
-          child: const Text('OK'),
+          child: Text(context.loc.add),
         ),
       ],
     );

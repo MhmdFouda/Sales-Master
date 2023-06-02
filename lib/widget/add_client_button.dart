@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/client.dart';
 import 'package:fouda_pharma/providers/client.dart';
 
@@ -19,7 +20,7 @@ class _AddClientButton extends ConsumerState<AddClientButton> {
   @override
   Widget build(BuildContext context) {
     return Button(
-      child: const Text('Add Client'),
+      child: Text(context.loc.add),
       onPressed: () => showContentDialog(context),
     );
   }
@@ -28,13 +29,13 @@ class _AddClientButton extends ConsumerState<AddClientButton> {
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Add New Client'),
+        title: Text(context.loc.newclient),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextBox(
               controller: clientNameController,
-              placeholder: 'Client Name',
+              placeholder: context.loc.name,
             ),
             const SizedBox(
               height: 10,
@@ -42,7 +43,7 @@ class _AddClientButton extends ConsumerState<AddClientButton> {
             TextBox(
               keyboardType: TextInputType.phone,
               controller: clientFirstNumController,
-              placeholder: 'First Number',
+              placeholder: context.loc.phone,
             ),
             const SizedBox(
               height: 10,
@@ -50,13 +51,13 @@ class _AddClientButton extends ConsumerState<AddClientButton> {
             TextBox(
               keyboardType: TextInputType.phone,
               controller: clientSecNumController,
-              placeholder: 'Second Number',
+              placeholder: context.loc.phone,
             ),
           ],
         ),
         actions: [
           Button(
-            child: const Text('Save'),
+            child: Text(context.loc.add),
             onPressed: () {
               ref.read(asyncClientProvider.notifier).addProduct(
                     Client(
@@ -69,7 +70,7 @@ class _AddClientButton extends ConsumerState<AddClientButton> {
             },
           ),
           FilledButton(
-            child: const Text('Cancel'),
+            child: Text(context.loc.cansel),
             onPressed: () => Navigator.pop(context),
           ),
         ],

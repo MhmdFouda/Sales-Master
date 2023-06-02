@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/client.dart';
 import 'package:fouda_pharma/screens/client_info_page.dart';
 import 'package:fouda_pharma/widget/add_client_button.dart';
@@ -12,25 +13,25 @@ class AllClientPage extends ConsumerWidget {
     final clientList = ref.watch(asyncClientProvider);
 
     return ScaffoldPage(
-      header: const Padding(
-        padding: EdgeInsets.all(30),
+      header: Padding(
+        padding: const EdgeInsets.all(30),
         child: Column(
           children: [
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    'Clients',
-                    style: TextStyle(
+                    context.loc.clients,
+                    style: const TextStyle(
                       fontSize: 48,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-                AddClientButton(),
+                const AddClientButton(),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 28,
             ),
             // AutoSuggestBox<Client>.form(

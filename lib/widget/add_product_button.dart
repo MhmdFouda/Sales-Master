@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 
@@ -19,7 +20,7 @@ class _AddProductButton extends ConsumerState<AddProductButton> {
   @override
   Widget build(BuildContext context) {
     return Button(
-      child: const Text('Add Product'),
+      child: Text(context.loc.add),
       onPressed: () => showContentDialog(context),
     );
   }
@@ -28,13 +29,13 @@ class _AddProductButton extends ConsumerState<AddProductButton> {
     await showDialog<String>(
       context: context,
       builder: (context) => ContentDialog(
-        title: const Text('Add New Product'),
+        title: Text(context.loc.newproduct),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextBox(
               controller: productNameController,
-              placeholder: 'Product Name',
+              placeholder: context.loc.name,
             ),
             const SizedBox(
               height: 10,
@@ -42,7 +43,7 @@ class _AddProductButton extends ConsumerState<AddProductButton> {
             TextBox(
               keyboardType: TextInputType.number,
               controller: productPriceController,
-              placeholder: 'Product Price',
+              placeholder: context.loc.price,
             ),
             const SizedBox(
               height: 10,
@@ -50,13 +51,13 @@ class _AddProductButton extends ConsumerState<AddProductButton> {
             TextBox(
               keyboardType: TextInputType.number,
               controller: productCountController,
-              placeholder: 'Product Count',
+              placeholder: context.loc.count,
             ),
           ],
         ),
         actions: [
           Button(
-            child: const Text('Save'),
+            child: Text(context.loc.add),
             onPressed: () {
               ref.read(asyncProductsProvider.notifier).addProduct(
                     Product(
@@ -65,13 +66,13 @@ class _AddProductButton extends ConsumerState<AddProductButton> {
                       count: int.parse(productCountController.text),
                     ),
                   );
-              Navigator.pop(context, 'User deleted file');
+              Navigator.pop(context);
               // Delete file here
             },
           ),
           FilledButton(
-            child: const Text('Cancel'),
-            onPressed: () => Navigator.pop(context, 'User canceled dialog'),
+            child: Text(context.loc.cansel),
+            onPressed: () => Navigator.pop(context),
           ),
         ],
       ),

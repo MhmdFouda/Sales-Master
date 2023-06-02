@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
 
 import 'package:fouda_pharma/providers/product_provider.dart';
@@ -51,7 +52,7 @@ class _SerchBarState extends ConsumerState<SerchBar> {
           Radius.circular(6),
         ),
       ),
-      barHintText: 'Search for products...',
+      barHintText: context.loc.search,
       barElevation: const MaterialStatePropertyAll(0),
       barShape: const MaterialStatePropertyAll(
         RoundedRectangleBorder(

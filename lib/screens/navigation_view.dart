@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/screens/all_products.dart';
 import 'package:fouda_pharma/screens/all_client_page.dart';
@@ -9,6 +8,7 @@ import 'package:fouda_pharma/screens/history.dart';
 import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
+import 'package:intl/intl.dart';
 import 'package:window_manager/window_manager.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {
@@ -22,6 +22,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
     with WindowListener {
   final viewKey = GlobalKey<NavigationViewState>();
   int index = 0;
+
   @override
   void initState() {
     super.initState();
@@ -43,12 +44,46 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   @override
   Widget build(BuildContext context) {
     final themeMod = ref.watch(themeDataProvider);
+    final hour = int.parse(DateFormat('H').format(DateTime.now()));
+
+    List<NavigationPaneItem> items = [
+      PaneItemSeparator(),
+      PaneItem(
+        icon: const Icon(
+          FluentIcons.home,
+        ),
+        title: Text(context.loc.home),
+        body: const HomePage(),
+      ),
+      PaneItem(
+        icon: const Icon(
+          FluentIcons.contact,
+        ),
+        title: Text(context.loc.clients),
+        body: const AllClientPage(),
+      ),
+      PaneItem(
+        icon: const Icon(
+          FluentIcons.product,
+        ),
+        title: Text(context.loc.products),
+        body: const AllProductList(),
+      ),
+      PaneItem(
+        icon: const Icon(
+          FluentIcons.history,
+        ),
+        title: Text(context.loc.history),
+        body: const HistoryPage(),
+      ),
+    ];
+
     return NavigationView(
       appBar: NavigationAppBar(
-        title: const DragToMoveArea(
+        title: DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Text('Fouda Pharma'),
+            child: Text(context.loc.appTitle),
           ),
         ),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
@@ -68,7 +103,9 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       ),
       key: viewKey,
       pane: NavigationPane(
-          header: const Text('Hello User'),
+          header: (hour >= 0 && hour < 12)
+              ? Text(context.loc.mornning)
+              : Text(context.loc.evenning),
           selected: index,
           onChanged: (value) => setState(() => index = value),
           displayMode: PaneDisplayMode.auto,
@@ -79,7 +116,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
               icon: const Icon(
                 FluentIcons.settings,
               ),
-              title: const Text('Settings'),
+              title: Text(context.loc.setting),
               body: const SettingPage(),
             ),
           ]),
@@ -88,64 +125,33 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
 
   @override
   void onWindowClose() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    bool _isPreventClose = await windowManager.isPreventClose();
-    if (_isPreventClose) {
-      showDialog(
-        context: context,
-        builder: (_) {
-          return ContentDialog(
-            title: const Text('Are you sure you want to close this window?'),
-            actions: [
-              FilledButton(
-                child: const Text('No'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FilledButton(
-                child: const Text('Yes'),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await windowManager.destroy();
-                },
-              ),
-            ],
-          );
-        },
-      );
+    bool isPreventClose = await windowManager.isPreventClose();
+    if (isPreventClose) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return ContentDialog(
+              title: const Text('Are you sure you want to close this window?'),
+              actions: [
+                FilledButton(
+                  child: const Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FilledButton(
+                  child: const Text('Yes'),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await windowManager.destroy();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
     }
   }
 }
-
-List<NavigationPaneItem> items = [
-  PaneItemSeparator(),
-  PaneItem(
-    icon: const Icon(
-      FluentIcons.home,
-    ),
-    title: const Text('Home'),
-    body: const HomePage(),
-  ),
-  PaneItem(
-    icon: const Icon(
-      FluentIcons.contact,
-    ),
-    title: const Text('Client Panel'),
-    body: const AllClientPage(),
-  ),
-  PaneItem(
-    icon: const Icon(
-      FluentIcons.product,
-    ),
-    title: const Text('All Products'),
-    body: const AllProductList(),
-  ),
-  PaneItem(
-    icon: const Icon(
-      FluentIcons.history,
-    ),
-    title: const Text('Orders History'),
-    body: const HistoryPage(),
-  ),
-];

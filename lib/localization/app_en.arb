@@ -1,0 +1,121 @@
+{
+  "appTitle": "Sales Master",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home Page"
+  },
+   "clients": "Clients",
+  "@clients": {
+    "description": "Client Page"
+  },
+   "products": "Home",
+  "@products": {
+    "description": "Products Page"
+  },
+   "history": "History",
+  "@history": {
+    "description": "History Page"
+  },
+   "setting": "Setting",
+  "@setting": {
+    "description": "Setting Page"
+  },
+   "mornning": "Good Morning",
+  "@mornning": {
+    "description": "Greeting"
+  },
+   "noon": "Good Afternoon",
+  "@noon": {
+    "description": "Greeting"
+  },
+   "evenning": "Good Evening",
+  "@evenning": {
+    "description": "Greeting"
+  },
+   "resetorder": "Reset Order",
+  "@resetorder": {
+    "description": "Empty Order List"
+  }
+  ,
+   "confirmorder": "Confirm Order",
+  "@confirmorder": {
+    "description": "Confirm Order"
+  }
+  ,
+   "totalorderprice": "Total Price ",
+  "@totalorderprice": {
+    "description": "Total Price"
+  }
+  ,
+   "egp": "EGP",
+  "@egp": {
+    "description": "EGYPTIAN POUND"
+  }
+  ,
+   "choseclient": "Choese client",
+  "@choseclient": {
+    "description": "Choese client"
+  }
+    ,
+   "newclient": "Add New Client",
+  "@newclient": {
+    "description": "add New Client"
+  }
+   ,
+   "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm"
+  }
+   ,
+   "cansel": "Cansel",
+  "@cansel": {
+    "description": "Cansel"
+  }
+  ,
+   "product": "Product",
+  "@product": {
+    "description": "Product"
+  }
+  ,
+   "count": "Count",
+  "@count": {
+    "description": "Count"
+  }
+  ,
+   "price": "Price",
+  "@price": {
+    "description": "Price"
+  }
+  ,
+   "add": "Add",
+  "@add": {
+    "description": "Add"
+  }
+   ,
+   "name": "Name",
+  "@name": {
+    "description": "Name"
+  }
+   ,
+   "phone": "phone Number",
+  "@phone": {
+    "description": "phone Number"
+  }
+   ,
+   "newproduct": "Add New Product",
+  "@newproduct": {
+    "description": "add New Product"
+  }
+   ,
+   "search": "Search for products",
+  "@search": {
+    "description": "Search for products"
+  }
+ 
+}
+
+
+

@@ -1,8 +1,8 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firedart/firedart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fouda_pharma/l10n/app_localizations.dart';
+import 'package:fouda_pharma/providers/localization.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/resources/preferences_store.dart';
 import 'package:fouda_pharma/screens/navigation_view.dart';
@@ -44,16 +44,9 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FluentApp(
-      // localizationsDelegates: const [
-      //   AppLocalizations.delegate,
-      //   GlobalMaterialLocalizations.delegate,
-      //   GlobalWidgetsLocalizations.delegate,
-      // ],
-      // supportedLocales: const [
-      //   Locale('en', ''),
-      //   Locale('ar', ''),
-      // ],
-      locale: const Locale('ar', ''),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: ref.watch(localizationProvider),
       debugShowCheckedModeBanner: false,
       title: 'Fouda Pharma',
       themeMode: ref.watch(themeDataProvider),

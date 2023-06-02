@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/screens/order_info_page.dart';
@@ -11,14 +12,14 @@ class HistoryPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final orderList = ref.watch(asyncOrderProviderProvider);
     return ScaffoldPage(
-      header: const Padding(
-        padding: EdgeInsets.all(30),
+      header: Padding(
+        padding: const EdgeInsets.all(30),
         child: Row(
           children: [
             Expanded(
               child: Text(
-                'Orders History',
-                style: TextStyle(
+                context.loc.history,
+                style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
                 ),
