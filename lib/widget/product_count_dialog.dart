@@ -50,7 +50,7 @@ class _DialogState extends ConsumerState<CountDialog> {
         mode: SpinButtonPlacementMode.inline,
       ),
       actions: [
-        Button(
+        FilledButton(
           onPressed: () {
             ref.read(orderProductListProvider.notifier).addProduct(
                   widget.product.copyWith(count: count),

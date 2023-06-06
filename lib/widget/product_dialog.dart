@@ -35,7 +35,7 @@ void productContentDialog({
           ),
           TextBox(
             controller: productUnitTypeController,
-            placeholder: 'Unit Type',
+            placeholder: context.loc.unittype,
           ),
           const SizedBox(
             height: 10,
@@ -51,7 +51,7 @@ void productContentDialog({
           TextBox(
             keyboardType: TextInputType.number,
             controller: productbublicPriceController,
-            placeholder: 'bublic count',
+            placeholder: context.loc.public,
           ),
           const SizedBox(
             height: 10,
@@ -67,7 +67,7 @@ void productContentDialog({
           TextBox(
             keyboardType: TextInputType.number,
             controller: productMinCountController,
-            placeholder: 'Min Count Value',
+            placeholder: context.loc.min,
           ),
         ],
       ),

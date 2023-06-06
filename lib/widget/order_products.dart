@@ -68,16 +68,16 @@ class ProductList extends ConsumerWidget {
     List<DataColumn> columns = [
       DataColumn(label: Text(context.loc.product)),
       DataColumn(label: Text(context.loc.count)),
-      const DataColumn(label: Text('Unit')),
+      DataColumn(label: Text(context.loc.unittype)),
       DataColumn(label: Text(context.loc.price)),
-      const DataColumn(label: Text('public Price')),
+      DataColumn(label: Text(context.loc.public)),
       DataColumn(label: Text(context.loc.totalorderprice)),
     ];
 
     if (productList.isEmpty) {
       return const Center(
         child: Text(
-          'Fouda Pharma',
+          'Sales Master',
           style: TextStyle(
             fontSize: 60,
             fontWeight: FontWeight.bold,

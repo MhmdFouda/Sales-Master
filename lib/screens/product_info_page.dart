@@ -84,19 +84,19 @@ class ProductInfoPage extends ConsumerWidget {
                         );
                   },
                 ),
-                child: const Text('Edit'),
+                child: Text(context.loc.edite),
               ),
               const SizedBox(
                 width: 20,
               ),
-              Button(
+              FilledButton(
                 onPressed: () {
                   ref
                       .read(asyncProductsProvider.notifier)
                       .deleteProduct(product.id!);
                   Navigator.of(context).pop();
                 },
-                child: const Text('Delete'),
+                child: Text(context.loc.delete),
               ),
             ],
           ),

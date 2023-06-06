@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/providers/localization.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/resources/preferences_store.dart';
-import 'package:fouda_pharma/screens/navigation_view.dart';
+import 'package:fouda_pharma/widget/auth_state.dart';
 import 'package:window_manager/window_manager.dart';
 
 // const appId = '1:228655808143:web:7d93af7de25a4f9a70bafa';
@@ -25,7 +25,7 @@ void main() async {
       TitleBarStyle.hidden,
       windowButtonVisibility: false,
     );
-    await windowManager.setMinimumSize(const Size(620, 720));
+    await windowManager.setMinimumSize(const Size(900, 720));
     await windowManager.show();
     await windowManager.setPreventClose(true);
     await windowManager.setSkipTaskbar(false);
@@ -43,7 +43,9 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeDataProvider.notifier);
     return FluentApp(
+      color: theme.systemAccentColor(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: ref.watch(localizationProvider),
@@ -52,7 +54,7 @@ class MyApp extends ConsumerWidget {
       themeMode: ref.watch(themeDataProvider),
       theme: ref.watch(themeDataProvider.notifier).lightTheme(),
       darkTheme: ref.watch(themeDataProvider.notifier).darkTheme(),
-      home: const NavigationPage(),
+      home: const AuthState(),
     );
   }
 }

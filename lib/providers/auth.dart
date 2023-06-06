@@ -10,11 +10,15 @@ Future<void> signIn(SignInRef ref,
 }
 
 @riverpod
-Future<void> signout(
+void signout(
   SignoutRef ref,
 ) async {
   FirebaseAuth.instance.signOut();
 }
 
 @riverpod
-bool authState(AuthStateRef ref) => FirebaseAuth.instance.isSignedIn;
+//get user email
+Future<String?> getUserEmail(GetUserEmailRef ref) async {
+  final user = await FirebaseAuth.instance.getUser();
+  return user.email;
+}

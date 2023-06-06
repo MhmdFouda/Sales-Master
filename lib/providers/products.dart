@@ -10,6 +10,10 @@ class OrderProductList extends _$OrderProductList {
     return [];
   }
 
+  void close() {
+    ref.keepAlive().close();
+  }
+
   double totalPrice() {
     double total = 0;
     for (var product in state) {

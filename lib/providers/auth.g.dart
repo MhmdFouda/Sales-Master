@@ -118,11 +118,11 @@ class SignInProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-String _$signoutHash() => r'9b64ff92c8377ba2aa2309f27c995901573b9062';
+String _$signoutHash() => r'8cb3702a53f47c9a1552b925f3f6070b2793efec';
 
 /// See also [signout].
 @ProviderFor(signout)
-final signoutProvider = AutoDisposeFutureProvider<void>.internal(
+final signoutProvider = AutoDisposeProvider<void>.internal(
   signout,
   name: r'signoutProvider',
   debugGetCreateSourceHash:
@@ -131,19 +131,19 @@ final signoutProvider = AutoDisposeFutureProvider<void>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef SignoutRef = AutoDisposeFutureProviderRef<void>;
-String _$authStateHash() => r'287898c99beb6fe14470a2fadcef3185831fc0fa';
+typedef SignoutRef = AutoDisposeProviderRef<void>;
+String _$getUserEmailHash() => r'f0c48aec4723db2c263d821dac0afeeb51c25144';
 
-/// See also [authState].
-@ProviderFor(authState)
-final authStateProvider = AutoDisposeProvider<bool>.internal(
-  authState,
-  name: r'authStateProvider',
+/// See also [getUserEmail].
+@ProviderFor(getUserEmail)
+final getUserEmailProvider = AutoDisposeFutureProvider<String?>.internal(
+  getUserEmail,
+  name: r'getUserEmailProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$authStateHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getUserEmailHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AuthStateRef = AutoDisposeProviderRef<bool>;
+typedef GetUserEmailRef = AutoDisposeFutureProviderRef<String?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

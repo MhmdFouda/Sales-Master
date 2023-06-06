@@ -29,7 +29,7 @@ class AllProductList extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Button(
+                FilledButton(
                   child: Text(context.loc.add),
                   onPressed: () => productContentDialog(
                     update: false,

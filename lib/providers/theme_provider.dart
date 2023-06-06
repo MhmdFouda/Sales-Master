@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:system_theme/system_theme.dart';
 part 'theme_provider.g.dart';
 
 @riverpod
@@ -40,22 +41,27 @@ class ThemeData extends _$ThemeData {
   FluentThemeData lightTheme() {
     return FluentThemeData(
       brightness: Brightness.light,
-      accentColor: Colors.blue,
-      visualDensity: VisualDensity.standard,
-      focusTheme: const FocusThemeData(
-        glowFactor: 0,
-      ),
+      accentColor: systemAccentColor(),
+      activeColor: Colors.purple,
     );
   }
 
   FluentThemeData darkTheme() {
     return FluentThemeData(
       brightness: Brightness.dark,
-      accentColor: Colors.blue,
-      visualDensity: VisualDensity.standard,
-      focusTheme: const FocusThemeData(
-        glowFactor: 0,
-      ),
+      accentColor: systemAccentColor(),
     );
+  }
+
+  AccentColor systemAccentColor() {
+    return AccentColor.swatch({
+      'darkest': SystemTheme.accentColor.darkest,
+      'darker': SystemTheme.accentColor.darker,
+      'dark': SystemTheme.accentColor.dark,
+      'normal': SystemTheme.accentColor.accent,
+      'light': SystemTheme.accentColor.light,
+      'lighter': SystemTheme.accentColor.lighter,
+      'lightest': SystemTheme.accentColor.lightest,
+    });
   }
 }

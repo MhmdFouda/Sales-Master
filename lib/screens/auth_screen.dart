@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/auth.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
@@ -11,14 +12,28 @@ class AuthPage extends ConsumerStatefulWidget {
   ConsumerState<AuthPage> createState() => _AuthPageState();
 }
 
-class _AuthPageState extends ConsumerState<AuthPage> {
+class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
+  bool obscure = true;
   final eController = TextEditingController();
   final pController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    windowManager.addListener(this);
+    _init();
+  }
+
   @override
   void dispose() {
     eController.dispose();
     pController.dispose();
+    windowManager.removeListener(this);
     super.dispose();
+  }
+
+  void _init() async {
+    await windowManager.setPreventClose(true);
   }
 
   @override
@@ -28,7 +43,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
         title: DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: Center(child: Text('Fouda Pharma')),
+            child: Center(child: Text('Sales Master')),
           ),
         ),
         actions: WindowButtons(),
@@ -44,7 +59,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Fouda pharma',
+                      'Sales Master',
                       style: TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
@@ -52,7 +67,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                     ),
                     SizedBox(height: 32),
                     Text(
-                      'Store management system',
+                      'Sales management system',
                       style: TextStyle(
                         fontSize: 20,
                       ),
@@ -74,20 +89,34 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       InfoLabel(
-                        label: 'Enter your email:',
+                        label: context.loc.signinmail,
                         child: TextBox(
+                          enableSuggestions: true,
+                          keyboardType: TextInputType.emailAddress,
                           controller: eController,
-                          placeholder: 'email',
+                          placeholder: context.loc.mail,
                           expands: false,
                         ),
                       ),
                       const SizedBox(height: 16),
                       InfoLabel(
-                        label: 'Enter your password:',
+                        label: context.loc.pass,
                         child: TextBox(
+                          keyboardType: TextInputType.number,
+                          obscureText: obscure,
                           controller: pController,
-                          placeholder: 'password',
+                          placeholder: context.loc.pass,
                           expands: false,
+                          suffix: Button(
+                              onPressed: () {
+                                setState(() {
+                                  obscure = !obscure;
+                                });
+                              },
+                              child: obscure
+                                  ? const Icon(FluentIcons.red_eye)
+                                  : const Icon(FluentIcons.hide3)),
+                          suffixMode: OverlayVisibilityMode.editing,
                         ),
                       ),
                     ],
@@ -97,18 +126,17 @@ class _AuthPageState extends ConsumerState<AuthPage> {
             ],
           ),
           const SizedBox(height: 40),
-          Button(
-            child: const Text('Sign In'),
+          FilledButton(
+            child: Text(context.loc.signin),
             onPressed: () {
-              ref.read(signInProvider(
-                  email: eController.text.toString(),
-                  password: pController.text.toString()));
+              ref.read(
+                signInProvider(
+                  email: eController.text,
+                  password: pController.text,
+                ),
+              );
             },
           ),
-          // Button(
-          //   child: Text('out'),
-          //   onPressed: () {},
-          // )
         ],
       ),
     );

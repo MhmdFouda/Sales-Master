@@ -94,12 +94,12 @@ class ClientInfoPage extends ConsumerWidget {
                         );
                   },
                 ),
-                child: const Text('Edit'),
+                child: Text(context.loc.edite),
               ),
               const SizedBox(
                 width: 20,
               ),
-              Button(
+              FilledButton(
                 onPressed: () {
                   ref
                       .read(asyncClientProvider.notifier)
@@ -107,7 +107,7 @@ class ClientInfoPage extends ConsumerWidget {
 
                   Navigator.of(context).pop();
                 },
-                child: const Text('Delete'),
+                child: Text(context.loc.delete),
               ),
             ],
           ),

@@ -28,7 +28,7 @@ class AllClientPage extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Button(
+                FilledButton(
                   child: Text(context.loc.add),
                   onPressed: () => clientContentDialog(
                     context: context,

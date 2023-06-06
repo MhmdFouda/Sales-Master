@@ -70,9 +70,9 @@
     "description": "Confirm"
   }
    ,
-   "cansel": "Cansel",
+   "cansel": "Cancel",
   "@cansel": {
-    "description": "Cansel"
+    "description": "Cancel"
   }
   ,
    "product": "Product",
@@ -129,6 +129,77 @@
   "@updateclient": {
     "description": "Update Client"
   }
+   ,
+   "unittype": "Unit",
+  "@unittype": {
+    "description": "Unit Type"
+  }
+  ,
+   "public": "Public count",
+  "@public": {
+    "description": "Public count"
+  }
+  ,
+   "min": "Min Count",
+  "@min": {
+    "description": "Min Count Value"
+  }
+  ,
+   "signinmail": "Enter your email:",
+  "@signinmail": {
+    "description": "Enter your email"
+  }
+  ,
+   "signinpass": "Enter your password:",
+  "@signinpass": {
+    "description": "Enter your password"
+  }
+  ,
+   "mail": "Email",
+  "@mail": {
+    "description": "Email"
+  }
+  ,
+   "pass": "Password",
+  "@pass": {
+    "description": "Password"
+  }
+  ,
+   "signin": "Sign In",
+  "@signin": {
+    "description": "Sign In"
+  }
+    ,
+   "confirmcloce": "Confirm Close ?",
+  "@confirmcloce": {
+    "description": "Confirm Close ?"
+  }
+   ,
+   "sure": "Are you sure you want to close the window ?",
+  "@sure": {
+    "description": "Are you sure you want to close the window ?"
+  }
+    ,
+   "yes": "Yes",
+  "@yes": {
+    "description": "Yes"
+  }
+    ,
+   "no": "No",
+  "@no": {
+    "description": "No"
+  }
+   ,
+   "edite": "Edite",
+  "@edite": {
+    "description": "Edite"
+  }
+  ,
+   "delete": "Delete",
+  "@delete": {
+    "description": "Delete"
+  }
+ 
 
   
  

@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
+import 'package:fouda_pharma/providers/auth.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/screens/all_products.dart';
 import 'package:fouda_pharma/screens/all_clients_page.dart';
@@ -86,6 +87,24 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
           ),
         ),
         actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          DropDownButton(
+            trailing: null,
+            title: const Icon(FluentIcons.contact, size: 16),
+            items: [
+              MenuFlyoutItem(
+                  text:
+                      Text(ref.watch(getUserEmailProvider).asData?.value ?? ''),
+                  onPressed: () {}),
+              const MenuFlyoutSeparator(),
+              MenuFlyoutItem(text: const Text('setting'), onPressed: () {}),
+              MenuFlyoutItem(
+                  text: const Text('log out'),
+                  onPressed: () {
+                    ref.read(signoutProvider);
+                  }),
+            ],
+          ),
+          const SizedBox(width: 8),
           Padding(
             padding: const EdgeInsetsDirectional.only(end: 8.0),
             child: ToggleSwitch(
@@ -131,16 +150,17 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
           context: context,
           builder: (_) {
             return ContentDialog(
-              title: const Text('Confirm Exite App ?'),
+              title: Text(context.loc.confirmcloce),
+              content: Text(context.loc.sure),
               actions: [
                 Button(
-                  child: const Text('No'),
+                  child: Text(context.loc.no),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
                 FilledButton(
-                  child: const Text('Yes'),
+                  child: Text(context.loc.yes),
                   onPressed: () async {
                     Navigator.of(context).pop();
                     await windowManager.destroy();

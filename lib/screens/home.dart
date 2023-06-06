@@ -31,7 +31,7 @@ class HomePage extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Button(
+                  FilledButton(
                     //confirm order
                     child: Text(context.loc.confirmorder),
                     onPressed: () {
@@ -44,6 +44,7 @@ class HomePage extends ConsumerWidget {
                     onPressed: () {
                       if (productList.isNotEmpty) {
                         ref.read(orderProductListProvider.notifier).reset();
+                        ref.read(orderProductListProvider.notifier).close();
                       }
                     },
                   ),
@@ -81,7 +82,7 @@ class HomePage extends ConsumerWidget {
               const SizedBox(
                 height: 10,
               ),
-              Button(
+              FilledButton(
                 child: Text(context.loc.add),
                 onPressed: () => clientContentDialog(
                   context: context,
@@ -97,7 +98,7 @@ class HomePage extends ConsumerWidget {
             ],
           ),
           actions: [
-            Button(
+            FilledButton(
               onPressed: () {
                 for (var product in productList) {
                   ref
