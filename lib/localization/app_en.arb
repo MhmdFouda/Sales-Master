@@ -11,7 +11,7 @@
   "@clients": {
     "description": "Client Page"
   },
-   "products": "Home",
+   "products": "Products",
   "@products": {
     "description": "Products Page"
   },
@@ -114,6 +114,23 @@
   "@search": {
     "description": "Search for products"
   }
+  ,
+   "update": "Update",
+  "@update": {
+    "description": "Update"
+  }
+   ,
+   "updateproduct": "Update Product",
+  "@updateproduct": {
+    "description": "Update Product"
+  }
+  ,
+   "updateclient": "Update Client",
+  "@updateclient": {
+    "description": "Update Client"
+  }
+
+  
  
 }
 

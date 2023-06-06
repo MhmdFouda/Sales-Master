@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/providers/localization.dart';
+import 'package:fouda_pharma/widget/chnage_local.dart';
 
 class SettingPage extends ConsumerWidget {
   const SettingPage({super.key});
@@ -15,19 +16,21 @@ class SettingPage extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text("Arabic"),
-                  ToggleSwitch(
-                    checked: locale != const Locale('ar', ''),
-                    onChanged: (value) {
-                      ref
-                          .read(localizationProvider.notifier)
-                          .changeLocale(value);
-                    },
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(
+                    color: FluentTheme.of(context).borderInputColor,
+                    width: 1.5,
                   ),
-                ],
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text("Language"),
+                    LocaleSegmentButton(locale: locale),
+                  ],
+                ),
               ),
             ],
           ),

@@ -1,19 +1,33 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'localization.g.dart';
 
 @riverpod
 class Localization extends _$Localization {
+  Localization() {
+    loadLocale();
+  }
   @override
-  Locale build() => const Locale('ar', '');
+  Locale build() => const Locale('en', '');
 
   // change locale to english
-  void changeLocale(bool isEnglish) {
-    if (isEnglish) {
-      state = const Locale('en', '');
-    } else {
-      state = const Locale('ar', '');
+  void changeLocale(Locale value) {
+    state = value;
+    saveLocale();
+  }
+
+  Future<void> saveLocale() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('locale', state.languageCode);
+  }
+
+  Future<void> loadLocale() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedLocale = prefs.getString('locale');
+    if (savedLocale != null && savedLocale.isNotEmpty) {
+      changeLocale(Locale(savedLocale, ''));
     }
   }
 }

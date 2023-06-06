@@ -14,28 +14,40 @@ class AsyncClient extends _$AsyncClient {
 
   Future<List<Client>> _fetchClient() async {
     final clientCollection = Firestore.instance.collection('clients');
-    final client = await clientCollection.get();
-    return client.map((doc) => Client.fromSnapshot(doc)).toList();
+    final documents = await clientCollection.get();
+    List<Client> clientList = [];
+    for (final doc in documents) {
+      clientList.add(Client.fromSnapshot(doc));
+    }
+    return clientList;
   }
 
   //get one product with id
-  Future<Client> getProduct(String id) async {
+  Future<Client> getClient(String id) async {
     final clientCollection = Firestore.instance.collection('clients');
     final client = await clientCollection.document(id).get();
     return Client.fromSnapshot(client);
   }
 
-  Future<void> addProduct(Client client) async {
+  Future<void> addClient(Client client) async {
     final clientCollection = Firestore.instance.collection('clients');
     final docRef = await clientCollection.add(client.toMap());
     final id = docRef.id;
-    return docRef.reference.update({'id': id});
+    await docRef.reference.update({'id': id});
+    ref.invalidate(asyncClientProvider);
   }
 
   // update product
-  Future<void> updateProduct(Client client) async {
+  Future<void> updateClient(Client client) async {
     final clientCollection = Firestore.instance.collection('clients');
-    return clientCollection.document(client.id!).update(client.toMap());
+    await clientCollection.document(client.id!).update(client.toMap());
+    ref.invalidate(asyncClientProvider);
   }
+
   // delete product
+  Future<void> deleteClient(String id) async {
+    final clientCollection = Firestore.instance.collection('clients');
+    await clientCollection.document(id).delete();
+    ref.invalidate(asyncClientProvider);
+  }
 }

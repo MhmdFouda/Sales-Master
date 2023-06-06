@@ -10,18 +10,22 @@ class DropDownClient extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final clientList = ref.watch(asyncClientProvider);
     final value = ref.watch(clientNameProvider);
+    List<ComboBoxItem<String>> comboBoxClient = [];
     return clientList.when(
       data: (data) {
+        for (var client in data) {
+          comboBoxClient.add(
+            ComboBoxItem<String>(
+              value: client.name,
+              child: Text(client.name),
+            ),
+          );
+        }
         return SizedBox(
           width: double.infinity,
           child: ComboBox<String>(
             value: value,
-            items: data
-                .map((client) => ComboBoxItem<String>(
-                      value: client.name,
-                      child: Text(client.name),
-                    ))
-                .toList(),
+            items: comboBoxClient.toList(),
             onChanged: (newvalue) {
               ref.read(clientNameProvider.notifier).changeClientName(newvalue!);
             },

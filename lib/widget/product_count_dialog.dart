@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
 
 class CountDialog extends ConsumerStatefulWidget {
@@ -16,12 +17,29 @@ class CountDialog extends ConsumerStatefulWidget {
 }
 
 class _DialogState extends ConsumerState<CountDialog> {
+  //* cant define var insid build method of statfuel widget
+  //* because when we call setState(){} the widget rebuild
+  //* and then our var like [count] here well get the intial value again
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
-    int count = 1;
+    // get the max count of the product avilable on store
+    int getMax() {
+      final products = ref.watch(asyncProductsProvider).asData?.value ?? [];
+      for (var product in products) {
+        if (product.id == widget.product.id) {
+          return product.count;
+        }
+      }
+      return 0;
+    }
+
     return ContentDialog(
       title: Text(context.loc.count),
       content: NumberBox(
+        min: 0,
+        max: getMax(),
         clearButton: false,
         value: count,
         onChanged: (value) {
@@ -29,7 +47,7 @@ class _DialogState extends ConsumerState<CountDialog> {
             count = value!;
           });
         },
-        mode: SpinButtonPlacementMode.compact,
+        mode: SpinButtonPlacementMode.inline,
       ),
       actions: [
         Button(

@@ -21,7 +21,7 @@ final appLocalizationsProvider = AutoDisposeProvider<dynamic>.internal(
 );
 
 typedef AppLocalizationsRef = AutoDisposeProviderRef<dynamic>;
-String _$localizationHash() => r'0f24d8e0ad87280bd32c9adfcbecc7e648a1caed';
+String _$localizationHash() => r'13aa970a2465fec2da3c693cda0cf0438b0d4054';
 
 /// See also [Localization].
 @ProviderFor(Localization)

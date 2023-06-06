@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:fouda_pharma/providers/product_provider.dart';
+import 'package:fouda_pharma/widget/product_dialog.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -68,14 +71,31 @@ class ProductInfoPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Button(
-                onPressed: () {},
+                onPressed: () => productContentDialog(
+                  product: product,
+                  update: true,
+                  context: context,
+                  ref: ref,
+                  title: context.loc.updateproduct,
+                  buttonTitle: context.loc.update,
+                  onPressed: (updatedProduct) {
+                    ref.read(asyncProductsProvider.notifier).updateProduct(
+                          updatedProduct.copyWith(id: product.id),
+                        );
+                  },
+                ),
                 child: const Text('Edit'),
               ),
               const SizedBox(
                 width: 20,
               ),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(asyncProductsProvider.notifier)
+                      .deleteProduct(product.id!);
+                  Navigator.of(context).pop();
+                },
                 child: const Text('Delete'),
               ),
             ],

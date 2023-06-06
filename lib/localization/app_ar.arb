@@ -23,5 +23,8 @@
   "name": "الإسم",
   "phone": "رقم الهاتف",
   "newproduct": "إضافة منتج جديد",
-  "search": "ابحث عن منتج"
+  "search": "ابحث عن منتج",
+  "update": "تحديث",
+  "updateproduct": "تحديث المنتج",
+  "updateclient": "تحديث العميل"
 }

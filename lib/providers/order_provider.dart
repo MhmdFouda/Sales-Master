@@ -14,8 +14,13 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
 
   Future<List<Order>> getFirebaseOrderList() async {
     final orderCollection = Firestore.instance.collection('orders');
-    final order = await orderCollection.get();
-    return order.map((doc) => Order.fromSnapshot(doc)).toList();
+    final documents =
+        await orderCollection.orderBy('confirmTime', descending: true).get();
+    List<Order> orderList = [];
+    for (final doc in documents) {
+      orderList.add(Order.fromSnapshot(doc));
+    }
+    return orderList;
   }
 
   Future<void> addOrder() async {

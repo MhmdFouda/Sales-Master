@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/screens/product_info_page.dart';
-import 'package:fouda_pharma/widget/add_product_button.dart';
+import 'package:fouda_pharma/widget/product_dialog.dart';
 
 class AllProductList extends ConsumerWidget {
   const AllProductList({
@@ -29,23 +29,26 @@ class AllProductList extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const AddProductButton(),
+                Button(
+                  child: Text(context.loc.add),
+                  onPressed: () => productContentDialog(
+                    update: false,
+                    context: context,
+                    ref: ref,
+                    title: context.loc.newproduct,
+                    buttonTitle: context.loc.add,
+                    onPressed: (newProduct) {
+                      ref
+                          .read(asyncProductsProvider.notifier)
+                          .addProduct(newProduct);
+                    },
+                  ),
+                )
               ],
             ),
             const SizedBox(
               height: 28,
             ),
-            // AutoSuggestBox<Product>.form(
-            //     items: products.value!.map((product) {
-            //   return AutoSuggestBoxItem<Product>(
-            //       onSelected: () {
-            //         Navigator.of(context).push(FluentPageRoute(
-            //           builder: (context) => ProductInfoPage(product: product),
-            //         ));
-            //       },
-            //       value: product,
-            //       label: product.name);
-            // }).toList())
           ],
         ),
       ),
@@ -55,8 +58,10 @@ class AllProductList extends ConsumerWidget {
             itemCount: data.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6.0, horizontal: 28),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 6.0,
+                  horizontal: 28,
+                ),
                 child: ListTile(
                   shape: RoundedRectangleBorder(
                     side: BorderSide(
@@ -76,7 +81,9 @@ class AllProductList extends ConsumerWidget {
                   ),
                   trailing: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(data[index].count.toString()),
+                    child: Text(
+                      data[index].count.toString(),
+                    ),
                   ),
                 ),
               );
@@ -86,7 +93,9 @@ class AllProductList extends ConsumerWidget {
         error: (error, stackTrace) => Text(
           error.toString(),
         ),
-        loading: () => const Center(child: ProgressBar()),
+        loading: () => const Center(
+          child: ProgressBar(),
+        ),
       ),
     );
   }

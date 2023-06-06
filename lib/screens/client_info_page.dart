@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/client.dart';
+import 'package:fouda_pharma/providers/client.dart';
+import 'package:fouda_pharma/widget/client_dialog.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -78,14 +81,32 @@ class ClientInfoPage extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Button(
-                onPressed: () {},
+                onPressed: () => clientContentDialog(
+                  context: context,
+                  ref: ref,
+                  client: client,
+                  update: true,
+                  title: context.loc.updateclient,
+                  buttonTitle: context.loc.cansel,
+                  onPressed: (updatedClient) {
+                    ref.read(asyncClientProvider.notifier).updateClient(
+                          updatedClient.copyWith(id: client.id),
+                        );
+                  },
+                ),
                 child: const Text('Edit'),
               ),
               const SizedBox(
                 width: 20,
               ),
               Button(
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(asyncClientProvider.notifier)
+                      .deleteClient(client.id!);
+
+                  Navigator.of(context).pop();
+                },
                 child: const Text('Delete'),
               ),
             ],

@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:fouda_pharma/screens/all_products.dart';
-import 'package:fouda_pharma/screens/all_client_page.dart';
-import 'package:fouda_pharma/screens/history.dart';
+import 'package:fouda_pharma/screens/all_clients_page.dart';
+import 'package:fouda_pharma/screens/all_orders.dart';
 import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
@@ -37,14 +37,13 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   }
 
   void _init() async {
-    // Add this line to override the default close handler
     await windowManager.setPreventClose(true);
   }
 
   @override
   Widget build(BuildContext context) {
     final themeMod = ref.watch(themeDataProvider);
-    final hour = int.parse(DateFormat('H').format(DateTime.now()));
+    final hourFormat = int.parse(DateFormat('H').format(DateTime.now()));
 
     List<NavigationPaneItem> items = [
       PaneItemSeparator(),
@@ -66,7 +65,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
         icon: const Icon(
           FluentIcons.product,
         ),
-        title: Text(context.loc.products),
+        title: Text(context.loc.product),
         body: const AllProductList(),
       ),
       PaneItem(
@@ -103,7 +102,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       ),
       key: viewKey,
       pane: NavigationPane(
-          header: (hour >= 0 && hour < 12)
+          header: (hourFormat >= 0 && hourFormat < 12)
               ? Text(context.loc.mornning)
               : Text(context.loc.evenning),
           selected: index,
@@ -132,9 +131,9 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
           context: context,
           builder: (_) {
             return ContentDialog(
-              title: const Text('Are you sure you want to close this window?'),
+              title: const Text('Confirm Exite App ?'),
               actions: [
-                FilledButton(
+                Button(
                   child: const Text('No'),
                   onPressed: () {
                     Navigator.of(context).pop();

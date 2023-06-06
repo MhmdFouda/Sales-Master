@@ -6,7 +6,7 @@ part of 'client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$asyncClientHash() => r'469c1d61fad9807bd16c95f5547ee0c6a4524786';
+String _$asyncClientHash() => r'dd04fdad03e9ec3795d90ad29b414b9c9a370615';
 
 /// See also [AsyncClient].
 @ProviderFor(AsyncClient)

@@ -2,12 +2,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:fouda_pharma/providers/client.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
-import 'package:fouda_pharma/widget/add_client_button.dart';
-import 'package:fouda_pharma/widget/product_inorder_list.dart';
-import 'package:fouda_pharma/widget/search.dart';
+import 'package:fouda_pharma/widget/client_dialog.dart';
+import 'package:fouda_pharma/widget/order_products.dart';
+import 'package:fouda_pharma/widget/search_bar.dart';
 import '../widget/drop_down_client.dart';
 
 class HomePage extends ConsumerWidget {
@@ -80,7 +81,19 @@ class HomePage extends ConsumerWidget {
               const SizedBox(
                 height: 10,
               ),
-              const AddClientButton(),
+              Button(
+                child: Text(context.loc.add),
+                onPressed: () => clientContentDialog(
+                  context: context,
+                  ref: ref,
+                  title: context.loc.newclient,
+                  buttonTitle: context.loc.add,
+                  update: false,
+                  onPressed: (newClient) {
+                    ref.read(asyncClientProvider.notifier).addClient(newClient);
+                  },
+                ),
+              )
             ],
           ),
           actions: [
@@ -107,6 +120,7 @@ class HomePage extends ConsumerWidget {
               child: Text(context.loc.confirm),
             ),
             Button(
+              //
               child: Text(context.loc.cansel),
               onPressed: () {
                 Navigator.of(context).pop();

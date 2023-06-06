@@ -24,39 +24,36 @@ class OrderProductList extends _$OrderProductList {
   }
 
   void addProduct(Product product, int? count) {
-    // Check if the product already exists
-    bool productExists =
-        state.any((existingProduct) => existingProduct.id == product.id);
-    // int existingProductIndex =
-    //     state.indexWhere((existingProduct) => existingProduct.id == product.id);
-
-    if (!productExists) {
-      state = [...state, product];
+    if (count != 0) {
+      bool productExists =
+          state.any((existingProduct) => existingProduct.id == product.id);
+      if (!productExists) {
+        state = [...state, product];
+      } else {
+        state = [
+          for (final existingProduct in state)
+            if (existingProduct.id == product.id)
+              existingProduct.copyWith(count: count)
+            else
+              existingProduct,
+        ];
+      }
     } else {
-      // Product already exists,update it with new count
-
-      // List<Product> updatedState = [...state];
-      // updatedState[existingProductIndex] =
-      //     updatedState[existingProductIndex].copyWith(count: count);
-      state = [
-        for (final existingProduct in state)
-          if (existingProduct.id == product.id)
-            existingProduct.copyWith(count: count)
-          else
-            existingProduct,
-      ];
+      removeProduct(product.id!);
     }
   }
 
   // update product count
   void updateProductCount({required String? productId, required int? count}) {
-    state = [
-      for (final product in state)
-        if (product.id == productId)
-          product.copyWith(count: count)
-        else
-          product,
-    ];
+    count != 0
+        ? state = [
+            for (var product in state)
+              if (product.id == productId)
+                product.copyWith(count: count)
+              else
+                product,
+          ]
+        : removeProduct(productId!);
   }
 
   void removeProduct(String productId) {

@@ -7,7 +7,7 @@ part of 'order_provider.dart';
 // **************************************************************************
 
 String _$asyncOrderProviderHash() =>
-    r'9377c78a395e47c5643b89c00042806d693f5429';
+    r'4634311ee0b801f013290fb3d0bd662e3a662c8c';
 
 /// See also [AsyncOrderProvider].
 @ProviderFor(AsyncOrderProvider)

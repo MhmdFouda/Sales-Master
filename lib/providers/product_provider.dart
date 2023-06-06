@@ -14,8 +14,12 @@ class AsyncProducts extends _$AsyncProducts {
 
   Future<List<Product>> _fetchProduct() async {
     final productCollection = Firestore.instance.collection('products');
-    final product = await productCollection.get();
-    return product.map((doc) => Product.fromSnapshot(doc)).toList();
+    final documents = await productCollection.get();
+    List<Product> productList = [];
+    for (final doc in documents) {
+      productList.add(Product.fromSnapshot(doc));
+    }
+    return productList;
   }
 
   //get one product with id
@@ -25,15 +29,30 @@ class AsyncProducts extends _$AsyncProducts {
     return Product.fromSnapshot(product);
   }
 
-  Future<Document> addProduct(Product product) async {
+  Future<void> addProduct(Product product) async {
     final productCollection = Firestore.instance.collection('products');
-    return productCollection.add(product.toMap());
+    await productCollection.add(product.toMap());
+    ref.invalidate(asyncProductsProvider);
   }
 
   // update product
   Future<void> updateProduct(Product product) async {
     final productCollection = Firestore.instance.collection('products');
-    return productCollection.document(product.id!).update(product.toMap());
+    await productCollection.document(product.id!).update(product.toMap());
+    ref.invalidate(asyncProductsProvider);
   }
+
+  Future<int> getProductCount(String id) async {
+    final productCollection = Firestore.instance.collection('products');
+    final product = await productCollection.document(id).get();
+    return Product.fromSnapshot(product).count;
+  }
+
   // delete product
+
+  Future<void> deleteProduct(String id) async {
+    final productCollection = Firestore.instance.collection('products');
+    await productCollection.document(id).delete();
+    ref.invalidate(asyncProductsProvider);
+  }
 }

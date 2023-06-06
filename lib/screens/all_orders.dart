@@ -53,8 +53,11 @@ class HistoryPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
                     children: [
-                      Text(ref.watch(
-                          dateFormaterProvider(data[index].confirmTime))),
+                      Text(
+                        ref.watch(
+                          dateFormaterProvider(data[index].confirmTime),
+                        ),
+                      ),
                       const SizedBox(
                         width: 10,
                       ),
@@ -68,7 +71,9 @@ class HistoryPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Text(data[index].clientName),
                 ),
-                trailing: Text(data[index].totalPrice.toString()),
+                trailing: Text(
+                  data[index].totalPrice.toString(),
+                ),
               ),
             );
           },
