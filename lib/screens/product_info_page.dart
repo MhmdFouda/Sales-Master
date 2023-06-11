@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
@@ -15,16 +17,22 @@ class ProductInfoPage extends ConsumerWidget {
   final Product product;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(asyncProductsProvider);
     return NavigationView(
-      appBar: const NavigationAppBar(
-        title: DragToMoveArea(
+      appBar: NavigationAppBar(
+        title: const DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
           ),
         ),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          WindowButtons(),
-        ]),
+        actions: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: Platform.isWindows
+              ? [
+                  const WindowButtons(),
+                ]
+              : [],
+        ),
       ),
       content: ScaffoldPage(
         header: Padding(

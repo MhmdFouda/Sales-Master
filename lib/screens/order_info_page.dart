@@ -1,8 +1,14 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/localization/extension.dart';
+import 'package:fouda_pharma/models/invoice.dart';
 import 'package:fouda_pharma/models/order.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/date_time_formater.dart';
+import 'package:fouda_pharma/providers/order_provider.dart';
+import 'package:fouda_pharma/widget/order_products.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -13,15 +19,20 @@ class OrderInfoPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final List<Product> orderProducts = order.products;
     return NavigationView(
-      appBar: const NavigationAppBar(
-        title: DragToMoveArea(
+      appBar: NavigationAppBar(
+        title: const DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
           ),
         ),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          WindowButtons(),
-        ]),
+        actions: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: Platform.isWindows
+              ? [
+                  const WindowButtons(),
+                ]
+              : [],
+        ),
       ),
       content: ScaffoldPage(
         header: Padding(
@@ -40,7 +51,7 @@ class OrderInfoPage extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    'Price : ${order.totalPrice}',
+                    '${context.loc.totalorderprice} : ${order.totalPrice}',
                     style: const TextStyle(
                       fontSize: 28,
                     ),
@@ -64,16 +75,32 @@ class OrderInfoPage extends ConsumerWidget {
         ),
         content: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: ListView.builder(
-            itemCount: orderProducts.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(orderProducts[index].name),
-                trailing: Text(orderProducts[index].price.toString()),
-              );
-            },
-          ),
+          child: ProductList(isOrder: true, productList: orderProducts),
         ),
+        bottomBar: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FilledButton(
+                  child: const Text("print"),
+                  onPressed: () => generateInvoice(order, context),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                Button(
+                  child: Text(
+                    context.loc.delete,
+                  ),
+                  onPressed: () {
+                    ref
+                        .read(asyncOrderProviderProvider.notifier)
+                        .deleteOrder(order.id!);
+                  },
+                ),
+              ],
+            )),
       ),
     );
   }

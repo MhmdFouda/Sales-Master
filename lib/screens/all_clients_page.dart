@@ -40,6 +40,7 @@ class AllClientPage extends ConsumerWidget {
                       ref
                           .read(asyncClientProvider.notifier)
                           .addClient(newClient);
+                      Navigator.of(context).pop();
                     },
                   ),
                 )

@@ -135,9 +135,9 @@
     "description": "Unit Type"
   }
   ,
-   "public": "Public count",
+   "public": "Public price",
   "@public": {
-    "description": "Public count"
+    "description": "Public price"
   }
   ,
    "min": "Min Count",

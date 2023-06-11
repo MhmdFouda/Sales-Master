@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
@@ -16,15 +18,20 @@ class ClientInfoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return NavigationView(
-      appBar: const NavigationAppBar(
-        title: DragToMoveArea(
+      appBar: NavigationAppBar(
+        title: const DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
           ),
         ),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          WindowButtons(),
-        ]),
+        actions: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: Platform.isWindows
+              ? [
+                  const WindowButtons(),
+                ]
+              : [],
+        ),
       ),
       content: ScaffoldPage(
         header: Padding(
@@ -87,11 +94,12 @@ class ClientInfoPage extends ConsumerWidget {
                   client: client,
                   update: true,
                   title: context.loc.updateclient,
-                  buttonTitle: context.loc.cansel,
+                  buttonTitle: context.loc.update,
                   onPressed: (updatedClient) {
                     ref.read(asyncClientProvider.notifier).updateClient(
                           updatedClient.copyWith(id: client.id),
                         );
+                    Navigator.of(context).pop();
                   },
                 ),
                 child: Text(context.loc.edite),

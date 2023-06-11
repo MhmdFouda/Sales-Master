@@ -22,7 +22,6 @@ class AsyncProducts extends _$AsyncProducts {
     return productList;
   }
 
-  //get one product with id
   Future<Product> getProduct(String id) async {
     final productCollection = Firestore.instance.collection('products');
     final product = await productCollection.document(id).get();
@@ -30,16 +29,26 @@ class AsyncProducts extends _$AsyncProducts {
   }
 
   Future<void> addProduct(Product product) async {
-    final productCollection = Firestore.instance.collection('products');
-    await productCollection.add(product.toMap());
-    ref.invalidate(asyncProductsProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final productCollection = Firestore.instance.collection('products');
+        await productCollection.add(product.toMap());
+        return _fetchProduct();
+      },
+    );
   }
 
   // update product
   Future<void> updateProduct(Product product) async {
-    final productCollection = Firestore.instance.collection('products');
-    await productCollection.document(product.id!).update(product.toMap());
-    ref.invalidate(asyncProductsProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final productCollection = Firestore.instance.collection('products');
+        await productCollection.document(product.id!).update(product.toMap());
+        return _fetchProduct();
+      },
+    );
   }
 
   Future<int> getProductCount(String id) async {
@@ -51,8 +60,11 @@ class AsyncProducts extends _$AsyncProducts {
   // delete product
 
   Future<void> deleteProduct(String id) async {
-    final productCollection = Firestore.instance.collection('products');
-    await productCollection.document(id).delete();
-    ref.invalidate(asyncProductsProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final productCollection = Firestore.instance.collection('products');
+      await productCollection.document(id).delete();
+      return _fetchProduct();
+    });
   }
 }

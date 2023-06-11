@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
@@ -27,8 +29,10 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   @override
   void initState() {
     super.initState();
-    windowManager.addListener(this);
-    _init();
+    if (Platform.isWindows) {
+      windowManager.addListener(this);
+      _init();
+    }
   }
 
   @override
@@ -86,37 +90,53 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
             child: Text(context.loc.appTitle),
           ),
         ),
-        actions: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
-          DropDownButton(
-            trailing: null,
-            title: const Icon(FluentIcons.contact, size: 16),
-            items: [
-              MenuFlyoutItem(
-                  text:
-                      Text(ref.watch(getUserEmailProvider).asData?.value ?? ''),
-                  onPressed: () {}),
-              const MenuFlyoutSeparator(),
-              MenuFlyoutItem(text: const Text('setting'), onPressed: () {}),
-              MenuFlyoutItem(
-                  text: const Text('log out'),
-                  onPressed: () {
-                    ref.read(signoutProvider);
-                  }),
-            ],
-          ),
-          const SizedBox(width: 8),
-          Padding(
-            padding: const EdgeInsetsDirectional.only(end: 8.0),
-            child: ToggleSwitch(
-              content: const Text('Dark Mode'),
-              checked: themeMod == ThemeMode.dark,
-              onChanged: (value) {
-                ref.read(themeDataProvider.notifier).changeTheme(value);
-              },
+        actions: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(32)),
+              child: SizedBox(
+                height: 30,
+                child: DropDownButton(
+                  placement: FlyoutPlacementMode.topCenter,
+                  trailing: null,
+                  title: const Icon(FluentIcons.contact, size: 16),
+                  items: [
+                    MenuFlyoutItem(
+                        leading: const Icon(FluentIcons.contact),
+                        text: Text(
+                            ref.watch(getUserEmailProvider).asData?.value ??
+                                ''),
+                        onPressed: () {}),
+                    const MenuFlyoutSeparator(),
+                    MenuFlyoutItem(
+                        leading: const Icon(FluentIcons.settings),
+                        text: const Text('setting'),
+                        onPressed: () {}),
+                    MenuFlyoutItem(
+                        leading: const Icon(FluentIcons.sign_out),
+                        text: const Text('log out'),
+                        onPressed: () {
+                          ref.read(signoutProvider);
+                        }),
+                  ],
+                ),
+              ),
             ),
-          ),
-          const WindowButtons(),
-        ]),
+            const SizedBox(width: 8),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8.0),
+              child: ToggleSwitch(
+                content: const Text('Dark Mode'),
+                checked: themeMod == ThemeMode.dark,
+                onChanged: (value) {
+                  ref.read(themeDataProvider.notifier).changeTheme(value);
+                },
+              ),
+            ),
+            Platform.isWindows ? const WindowButtons() : const SizedBox(),
+          ],
+        ),
         automaticallyImplyLeading: false,
       ),
       key: viewKey,

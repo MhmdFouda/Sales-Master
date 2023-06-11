@@ -22,6 +22,14 @@ class OrderProductList extends _$OrderProductList {
     return total;
   }
 
+  double publicTotalPrice() {
+    double publicTotal = 0;
+    for (var product in state) {
+      publicTotal += product.publicPrice * product.count;
+    }
+    return publicTotal;
+  }
+
   // reset state
   void reset() {
     state = [];

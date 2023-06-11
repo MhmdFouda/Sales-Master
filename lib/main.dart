@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firedart/firedart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -16,20 +18,24 @@ const projectId = 'fouda-pharma';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseAuth.initialize(apiKey, await PreferencesStore.create());
-
+  FirebaseAuth.initialize(
+    apiKey,
+    await PreferencesStore.create(),
+  );
+  if (Platform.isWindows) {
+    await WindowManager.instance.ensureInitialized();
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.setTitleBarStyle(
+        TitleBarStyle.hidden,
+        windowButtonVisibility: false,
+      );
+      await windowManager.setMinimumSize(const Size(900, 720));
+      await windowManager.show();
+      await windowManager.setPreventClose(true);
+      await windowManager.setSkipTaskbar(false);
+    });
+  }
   Firestore.initialize(projectId);
-  await WindowManager.instance.ensureInitialized();
-  windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.setTitleBarStyle(
-      TitleBarStyle.hidden,
-      windowButtonVisibility: false,
-    );
-    await windowManager.setMinimumSize(const Size(900, 720));
-    await windowManager.show();
-    await windowManager.setPreventClose(true);
-    await windowManager.setSkipTaskbar(false);
-  });
 
   runApp(
     const ProviderScope(

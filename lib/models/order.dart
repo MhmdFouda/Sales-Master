@@ -1,5 +1,6 @@
 import 'package:firedart/firedart.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:fouda_pharma/models/product.dart';
 
 @immutable
@@ -8,23 +9,26 @@ class Order {
   final String? id;
   final String clientName;
   final double totalPrice;
+  final double publicTotalPrice;
   final DateTime confirmTime;
 
   Order({
-    this.id,
+    DateTime? confirmTime,
     required this.products,
+    this.id,
     required this.clientName,
     required this.totalPrice,
-    DateTime? confirmTime,
+    required this.publicTotalPrice,
   }) : confirmTime = confirmTime ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'products': products.map((product) => product.toMap()).toList(),
+      'products': products.map((x) => x.toMap()).toList(),
       'id': id,
       'clientName': clientName,
       'totalPrice': totalPrice,
-      'confirmTime': confirmTime.toUtc().toIso8601String(),
+      'publicTotalPrice': publicTotalPrice,
+      'confirmTime': confirmTime.millisecondsSinceEpoch,
     };
   }
 
@@ -38,6 +42,7 @@ class Order {
       id: map['id'] != null ? map['id'] as String : null,
       clientName: map['clientName'] as String,
       totalPrice: map['totalPrice'] as double,
+      publicTotalPrice: map['publicTotalPrice'] as double,
       confirmTime:
           DateTime.fromMillisecondsSinceEpoch(map['confirmTime'] as int),
     );
@@ -47,12 +52,17 @@ class Order {
     final List<Product> products = List<Product>.from(
         (doc['products']).map((product) => Product.fromMap(product)));
 
+    final int confirmTimeMillis = doc['confirmTime'] as int;
+    final DateTime confirmTime =
+        DateTime.fromMillisecondsSinceEpoch(confirmTimeMillis);
+
     return Order(
       id: doc.id,
       products: products,
       clientName: doc['clientName'],
       totalPrice: doc['totalPrice'].toDouble(),
-      confirmTime: DateTime.parse(doc['confirmTime']),
+      publicTotalPrice: doc['publicTotalPrice'].toDouble(),
+      confirmTime: confirmTime,
     );
   }
 
@@ -61,6 +71,7 @@ class Order {
     String? id,
     String? clientName,
     double? totalPrice,
+    double? publicTotalPrice,
     DateTime? confirmTime,
   }) {
     return Order(
@@ -68,6 +79,7 @@ class Order {
       id: id ?? this.id,
       clientName: clientName ?? this.clientName,
       totalPrice: totalPrice ?? this.totalPrice,
+      publicTotalPrice: publicTotalPrice ?? this.publicTotalPrice,
       confirmTime: confirmTime ?? this.confirmTime,
     );
   }

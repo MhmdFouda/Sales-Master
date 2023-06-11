@@ -28,15 +28,29 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
     final products = ref.watch(orderProductListProvider);
     final totalprice =
         ref.watch(orderProductListProvider.notifier).totalPrice();
+    final publicTotalPrice =
+        ref.watch(orderProductListProvider.notifier).publicTotalPrice();
     final order = Order(
-        products: products,
-        clientName: clientName ?? '',
-        totalPrice: totalprice);
+      products: products,
+      clientName: clientName ?? '',
+      totalPrice: totalprice,
+      publicTotalPrice: publicTotalPrice,
+    );
     final collection = Firestore.instance.collection('orders');
-    final orderData = order.toMap();
-    final docRef = await collection.add(orderData);
-    final orderId = docRef.id;
-    await docRef.reference.update({'id': orderId});
+    final docRef = await collection.add(order.toMap());
+    await docRef.reference.update({'id': docRef.id});
+  }
+
+  // delete order with id
+  Future<void> deleteOrder(String id) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final collection = Firestore.instance.collection('orders');
+        await collection.document(id).delete();
+        return getFirebaseOrderList();
+      },
+    );
   }
 }
 

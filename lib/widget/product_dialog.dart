@@ -12,12 +12,32 @@ void productContentDialog({
   required final bool update,
   final Product? product,
 }) async {
-  final productNameController = TextEditingController();
-  final productUnitTypeController = TextEditingController();
-  final productPriceController = TextEditingController();
-  final productbublicPriceController = TextEditingController();
-  final productCountController = TextEditingController();
-  final productMinCountController = TextEditingController();
+  final productNameController = TextEditingController(
+    text: update ? product?.name : null,
+  );
+  final productUnitTypeController = TextEditingController(
+    text: update ? product?.unitType : null,
+  );
+  final productPriceController = TextEditingController(
+    text: update
+        ? (product?.price == 0.0 ? '' : product?.price.toString())
+        : null,
+  );
+  final productpublicPriceController = TextEditingController(
+    text: update
+        ? (product?.publicPrice == 0.0 ? '' : product?.publicPrice.toString())
+        : null,
+  );
+  final productCountController = TextEditingController(
+    text: update
+        ? (product?.count == 0.0 ? '' : product?.count.toString())
+        : null,
+  );
+  final productMinCountController = TextEditingController(
+    text: update
+        ? (product?.minCount == 0.0 ? '' : product?.minCount.toString())
+        : null,
+  );
 
   await showDialog(
     context: context,
@@ -26,48 +46,60 @@ void productContentDialog({
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextBox(
-            controller: productNameController,
-            placeholder: update ? product!.name : context.loc.name,
+          ListTile(
+            leading: Text(context.loc.name),
+            title: TextBox(
+              controller: productNameController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            controller: productUnitTypeController,
-            placeholder: context.loc.unittype,
+          ListTile(
+            leading: Text(context.loc.unittype),
+            title: TextBox(
+              controller: productUnitTypeController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.number,
-            controller: productPriceController,
-            placeholder: update ? product!.price.toString() : context.loc.price,
+          ListTile(
+            leading: Text(context.loc.price),
+            title: TextBox(
+              keyboardType: TextInputType.number,
+              controller: productPriceController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.number,
-            controller: productbublicPriceController,
-            placeholder: context.loc.public,
+          ListTile(
+            leading: Text(context.loc.public),
+            title: TextBox(
+              keyboardType: TextInputType.number,
+              controller: productpublicPriceController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.number,
-            controller: productCountController,
-            placeholder: update ? product!.count.toString() : context.loc.count,
+          ListTile(
+            leading: Text(context.loc.count),
+            title: TextBox(
+              keyboardType: TextInputType.number,
+              controller: productCountController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.number,
-            controller: productMinCountController,
-            placeholder: context.loc.min,
+          ListTile(
+            leading: Text(context.loc.min),
+            title: TextBox(
+              keyboardType: TextInputType.number,
+              controller: productMinCountController,
+            ),
           ),
         ],
       ),
@@ -75,28 +107,29 @@ void productContentDialog({
         FilledButton(
           child: Text(buttonTitle),
           onPressed: () {
-            onPressed(
-              Product(
-                name: productNameController.text.isNotEmpty
-                    ? productNameController.text
-                    : '',
-                price: productPriceController.text.isNotEmpty
-                    ? double.parse(productPriceController.text)
-                    : 0.0,
-                count: productCountController.text.isNotEmpty
-                    ? int.parse(productCountController.text)
-                    : 0,
-                minCount: productMinCountController.text.isNotEmpty
-                    ? int.parse(productMinCountController.text)
-                    : 0,
-                bublicPrice: productbublicPriceController.text.isNotEmpty
-                    ? double.parse(productbublicPriceController.text)
-                    : 0.0,
-                unitType: productUnitTypeController.text.isNotEmpty
-                    ? productUnitTypeController.text
-                    : '',
-              ),
-            );
+            onPressed(Product(
+              name: productNameController.text.isNotEmpty
+                  ? productNameController.text
+                  : '',
+              price: productPriceController.text.isNotEmpty
+                  ? double.parse(productPriceController.text)
+                  : 0.0,
+              count: productCountController.text.isNotEmpty
+                  ? int.parse(productCountController.text)
+                  : 0,
+              intialCount: productCountController.text.isNotEmpty
+                  ? int.parse(productCountController.text)
+                  : 0,
+              minCount: productMinCountController.text.isNotEmpty
+                  ? int.parse(productMinCountController.text)
+                  : 0,
+              publicPrice: productpublicPriceController.text.isNotEmpty
+                  ? double.parse(productpublicPriceController.text)
+                  : 0.0,
+              unitType: productUnitTypeController.text.isNotEmpty
+                  ? productUnitTypeController.text
+                  : '',
+            ));
             Navigator.pop(context);
           },
         ),
@@ -112,5 +145,5 @@ void productContentDialog({
   productPriceController.dispose();
   productCountController.dispose();
   productMinCountController.dispose();
-  productbublicPriceController.dispose();
+  productpublicPriceController.dispose();
 }

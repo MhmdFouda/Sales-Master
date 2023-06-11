@@ -30,24 +30,39 @@ class AsyncClient extends _$AsyncClient {
   }
 
   Future<void> addClient(Client client) async {
-    final clientCollection = Firestore.instance.collection('clients');
-    final docRef = await clientCollection.add(client.toMap());
-    final id = docRef.id;
-    await docRef.reference.update({'id': id});
-    ref.invalidate(asyncClientProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final clientCollection = Firestore.instance.collection('clients');
+        final docRef = await clientCollection.add(client.toMap());
+        final id = docRef.id;
+        await docRef.reference.update({'id': id});
+        return _fetchClient();
+      },
+    );
   }
 
   // update product
   Future<void> updateClient(Client client) async {
-    final clientCollection = Firestore.instance.collection('clients');
-    await clientCollection.document(client.id!).update(client.toMap());
-    ref.invalidate(asyncClientProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final clientCollection = Firestore.instance.collection('clients');
+        await clientCollection.document(client.id!).update(client.toMap());
+        return _fetchClient();
+      },
+    );
   }
 
   // delete product
   Future<void> deleteClient(String id) async {
-    final clientCollection = Firestore.instance.collection('clients');
-    await clientCollection.document(id).delete();
-    ref.invalidate(asyncClientProvider);
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () async {
+        final clientCollection = Firestore.instance.collection('clients');
+        await clientCollection.document(id).delete();
+        return _fetchClient();
+      },
+    );
   }
 }

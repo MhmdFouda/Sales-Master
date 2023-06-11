@@ -12,9 +12,15 @@ void clientContentDialog({
   required final bool update,
   final Client? client,
 }) async {
-  final clientNameController = TextEditingController();
-  final clientFirstNumController = TextEditingController();
-  final clientSecNumController = TextEditingController();
+  final clientNameController = TextEditingController(
+    text: update ? client!.name : null,
+  );
+  final clientFirstNumController = TextEditingController(
+    text: update ? client!.phoneNumber : null,
+  );
+  final clientSecNumController = TextEditingController(
+    text: update ? client!.secPhoneNumber : null,
+  );
 
   await showDialog(
     context: context,
@@ -23,25 +29,31 @@ void clientContentDialog({
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextBox(
-            controller: clientNameController,
-            placeholder: update ? client!.name : context.loc.name,
+          ListTile(
+            leading: Text(context.loc.name),
+            title: TextBox(
+              controller: clientNameController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.phone,
-            controller: clientFirstNumController,
-            placeholder: update ? client!.phoneNumber : context.loc.phone,
+          ListTile(
+            leading: Text(context.loc.phone),
+            title: TextBox(
+              keyboardType: TextInputType.phone,
+              controller: clientFirstNumController,
+            ),
           ),
           const SizedBox(
             height: 10,
           ),
-          TextBox(
-            keyboardType: TextInputType.phone,
-            controller: clientSecNumController,
-            placeholder: update ? client!.secPhoneNumber : context.loc.phone,
+          ListTile(
+            leading: Text(context.loc.phone),
+            title: TextBox(
+              keyboardType: TextInputType.phone,
+              controller: clientSecNumController,
+            ),
           ),
         ],
       ),
@@ -51,9 +63,15 @@ void clientContentDialog({
           onPressed: () {
             onPressed(
               Client(
-                  name: clientNameController.text,
-                  phoneNumber: clientFirstNumController.text,
-                  secPhoneNumber: clientSecNumController.text),
+                  name: clientNameController.text.isNotEmpty
+                      ? clientNameController.text
+                      : '',
+                  phoneNumber: clientFirstNumController.text.isNotEmpty
+                      ? clientFirstNumController.text
+                      : '',
+                  secPhoneNumber: clientSecNumController.text.isNotEmpty
+                      ? clientSecNumController.text
+                      : ''),
             );
           },
         ),

@@ -8,38 +8,42 @@ class Product {
   final String? id;
   final String name;
   final double price;
-  final double bublicPrice;
+  final double publicPrice;
   final String unitType;
   final int count;
   final int minCount;
+  final int intialCount;
 
   const Product({
     this.id,
     required this.name,
     required this.price,
-    required this.bublicPrice,
+    required this.publicPrice,
     required this.unitType,
     required this.count,
     required this.minCount,
+    required this.intialCount,
   });
 
   Product copyWith({
     String? id,
     String? name,
     double? price,
-    double? bublicPrice,
+    double? publicPrice,
     String? unitType,
     int? count,
     int? minCount,
+    int? intialCount,
   }) {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,
       price: price ?? this.price,
-      bublicPrice: bublicPrice ?? this.bublicPrice,
+      publicPrice: publicPrice ?? this.publicPrice,
       unitType: unitType ?? this.unitType,
       count: count ?? this.count,
       minCount: minCount ?? this.minCount,
+      intialCount: intialCount ?? this.intialCount,
     );
   }
 
@@ -48,10 +52,11 @@ class Product {
       id: map['id'] != null ? map['id'] as String : null,
       name: map['name'] as String,
       price: map['price'] as double,
-      bublicPrice: map['bublicPrice'] as double,
+      publicPrice: map['publicPrice'] as double,
       unitType: map['unitType'] as String,
       count: map['count'] as int,
       minCount: map['minCount'] as int,
+      intialCount: map['intialCount'] as int,
     );
   }
 
@@ -59,10 +64,11 @@ class Product {
     return <String, dynamic>{
       'name': name,
       'price': price,
-      'bublicPrice': bublicPrice,
+      'publicPrice': publicPrice,
       'unitType': unitType,
       'count': count,
       'minCount': minCount,
+      'intialCount': intialCount,
     };
   }
 
@@ -71,10 +77,11 @@ class Product {
       id: doc.id,
       name: doc['name'],
       price: doc['price'].toDouble(),
-      bublicPrice: doc['bublicPrice'].toDouble(),
+      publicPrice: doc['publicPrice'].toDouble(),
       unitType: doc['unitType'],
       count: doc['count'].toInt(),
       minCount: doc['minCount'].toInt(),
+      intialCount: doc['intialCount'].toInt(),
     );
   }
 }

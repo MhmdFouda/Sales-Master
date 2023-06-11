@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
@@ -20,8 +22,10 @@ class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
   @override
   void initState() {
     super.initState();
-    windowManager.addListener(this);
-    _init();
+    if (Platform.isWindows) {
+      windowManager.addListener(this);
+      _init();
+    }
   }
 
   @override
@@ -39,14 +43,14 @@ class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      appBar: const NavigationAppBar(
-        title: DragToMoveArea(
+      appBar: NavigationAppBar(
+        title: const DragToMoveArea(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
             child: Center(child: Text('Sales Master')),
           ),
         ),
-        actions: WindowButtons(),
+        actions: Platform.isWindows ? const WindowButtons() : null,
         automaticallyImplyLeading: false,
       ),
       content: Column(
@@ -102,7 +106,6 @@ class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
                       InfoLabel(
                         label: context.loc.pass,
                         child: TextBox(
-                          keyboardType: TextInputType.number,
                           obscureText: obscure,
                           controller: pController,
                           placeholder: context.loc.pass,
@@ -140,5 +143,38 @@ class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
         ],
       ),
     );
+  }
+
+  @override
+  void onWindowClose() async {
+    bool isPreventClose = await windowManager.isPreventClose();
+    if (isPreventClose) {
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return ContentDialog(
+              title: Text(context.loc.confirmcloce),
+              content: Text(context.loc.sure),
+              actions: [
+                Button(
+                  child: Text(context.loc.no),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FilledButton(
+                  child: Text(context.loc.yes),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                    await windowManager.destroy();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
   }
 }

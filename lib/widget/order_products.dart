@@ -3,15 +3,17 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
+import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
 
 class ProductList extends ConsumerWidget {
-  const ProductList({super.key});
-
+  const ProductList(
+      {required this.isOrder, required this.productList, super.key});
+  final List<Product> productList;
+  final bool isOrder;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productList = ref.watch(orderProductListProvider);
     int getMax(String id) {
       final products = ref.watch(asyncProductsProvider).asData?.value ?? [];
       for (var product in products) {
@@ -34,20 +36,23 @@ class ProductList extends ConsumerWidget {
             Text(product.name),
           ),
           DataCell(
-            NumberBox(
-              max: getMax(product.id!),
-              min: 0,
-              clearButton: false,
-              value: product.count,
-              onChanged: (value) async {
-                Future.delayed(const Duration(milliseconds: 100), () {
-                  ref
-                      .read(orderProductListProvider.notifier)
-                      .updateProductCount(productId: product.id, count: value);
-                });
-              },
-              mode: SpinButtonPlacementMode.inline,
-            ),
+            isOrder
+                ? Text(product.count.toString())
+                : NumberBox(
+                    max: getMax(product.id!),
+                    min: 0,
+                    clearButton: false,
+                    value: product.count,
+                    onChanged: (value) async {
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        ref
+                            .read(orderProductListProvider.notifier)
+                            .updateProductCount(
+                                productId: product.id, count: value);
+                      });
+                    },
+                    mode: SpinButtonPlacementMode.inline,
+                  ),
           ),
           DataCell(
             Text(product.unitType.toString()),
@@ -56,7 +61,7 @@ class ProductList extends ConsumerWidget {
             Text(product.price.toString()),
           ),
           DataCell(
-            Text(product.bublicPrice.toString()),
+            Text(product.publicPrice.toString()),
           ),
           DataCell(
             Text(totalPrice.toString()),
