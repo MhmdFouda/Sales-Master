@@ -18,6 +18,8 @@ class ProductInfoPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(asyncProductsProvider);
+    final headerSize = Platform.isWindows ? 42.0 : 24.0;
+    final subHeaderSize = Platform.isWindows ? 28.0 : 18.0;
     return NavigationView(
       appBar: NavigationAppBar(
         title: const DragToMoveArea(
@@ -40,35 +42,38 @@ class ProductInfoPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    'Price : ${product.price}',
-                    style: const TextStyle(
-                      fontSize: 28,
-                    ),
-                  ),
-                ],
+              Text(
+                maxLines: 3,
+                product.name,
+                style: TextStyle(
+                  fontSize: headerSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(
                 height: 26,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  'Count : ${product.count}',
-                  style: const TextStyle(
-                    fontSize: 28,
+              Row(
+                children: [
+                  Text(
+                    'Price : ${product.price}',
+                    style: TextStyle(
+                      fontSize: subHeaderSize,
+                    ),
                   ),
-                ),
+                  const SizedBox(
+                    width: 26,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      'Count : ${product.count}',
+                      style: TextStyle(
+                        fontSize: subHeaderSize,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

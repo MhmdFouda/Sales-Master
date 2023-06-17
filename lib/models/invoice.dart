@@ -1,15 +1,17 @@
 import 'dart:io';
-import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/models/order.dart';
 import 'package:flutter/services.dart';
+import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart' as pw;
+import 'package:pdf/pdf.dart' as pdf;
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
-Future<void> generateInvoice(Order order, BuildContext context) async {
+Future<void> generateInvoice(
+    Order order, BuildContext context, WidgetRef ref) async {
   // Load font file data from assets
   final ByteData fontData = await rootBundle.load("assets/fonts/arabic.ttf");
   //Create an instance of PdfTrueTypeFont
@@ -41,16 +43,17 @@ Future<void> generateInvoice(Order order, BuildContext context) async {
   document.dispose();
   //Save and launch the file.
   if (context.mounted) {
-    await saveAndLaunchFile(bytes, 'Invoice.pdf', context);
+    await saveAndLaunchFile(bytes, 'Invoice.pdf', context, ref);
   }
 }
 
 // save file as pdf and launch it in android
 
-Future<void> saveAndLaunchFile(
-    List<int> bytes, String fileName, BuildContext context) async {
+Future<void> saveAndLaunchFile(List<int> bytes, String fileName,
+    BuildContext context, WidgetRef ref) async {
   final Directory directory = await getApplicationSupportDirectory();
-
+  final date = DateTime.now();
+  final dateFormated = ref.watch(dateFormaterProvider(date));
   final path = directory.path;
   final file = File('$path/$fileName');
   await file.writeAsBytes(bytes, flush: true);
@@ -61,9 +64,15 @@ Future<void> saveAndLaunchFile(
         context,
         MaterialPageRoute(
           builder: (context) => PdfPreview(
+            pdfFileName: 'SalesMaster-$dateFormated.pdf',
+            previewPageMargin: const EdgeInsets.all(2),
+            canDebug: false,
             canChangeOrientation: false,
+            padding: const EdgeInsets.only(
+              top: 150,
+            ),
 
-            build: (pw.PdfPageFormat format) => file.readAsBytesSync(),
+            build: (pdf.PdfPageFormat format) => file.readAsBytesSync(),
             // ... other properties for PDFView
           ),
         ),
@@ -84,47 +93,44 @@ PdfLayoutResult drawHeader(PdfPage page, Size pageSize, PdfGrid grid,
     Uint8List arabicFontBytes, Order order) {
   // Create a PdfFont using the loaded font file data
   final PdfFont arabicFont = PdfTrueTypeFont(arabicFontBytes, 12);
+  final PdfFont arabicFontTitle = PdfTrueTypeFont(arabicFontBytes, 18);
   //Draw rectangle
   page.graphics.drawRectangle(
       brush: PdfSolidBrush(PdfColor(91, 126, 215)),
-      bounds: Rect.fromLTWH(0, 0, pageSize.width - 115, 60));
+      bounds: Rect.fromLTWH(0, 0, pageSize.width - 115, 50));
   //Draw string
-  page.graphics.drawString('فاتورة', arabicFont,
-      brush: PdfBrushes.white,
-      bounds: Rect.fromLTWH(25, 0, pageSize.width - 115, 60),
-      format: PdfStringFormat(
-          textDirection: PdfTextDirection.rightToLeft,
-          lineAlignment: PdfVerticalAlignment.middle));
+  page.graphics.drawString(
+    'فاتورة',
+    arabicFontTitle,
+    brush: PdfBrushes.white,
+    bounds: Rect.fromLTWH(25, 0, pageSize.width - 115, 50),
+    format: PdfStringFormat(
+      textDirection: PdfTextDirection.rightToLeft,
+      lineAlignment: PdfVerticalAlignment.middle,
+    ),
+  );
 
   page.graphics.drawRectangle(
-      bounds: Rect.fromLTWH(300, 0, pageSize.width - 300, 60),
+      bounds: Rect.fromLTWH(300, 0, pageSize.width - 300, 50),
       brush: PdfSolidBrush(PdfColor(65, 104, 205)));
 
-  page.graphics.drawString(r'$' + getTotalAmount(grid).toString(), arabicFont,
-      bounds: Rect.fromLTWH(300, 0, pageSize.width - 300, 60),
-      brush: PdfBrushes.white,
-      format: PdfStringFormat(
-          textDirection: PdfTextDirection.rightToLeft,
-          alignment: PdfTextAlignment.center,
-          lineAlignment: PdfVerticalAlignment.middle));
-
   //Draw string
-  page.graphics.drawString('ج م', arabicFont,
+  page.graphics.drawString('Fouda Pharma ', arabicFontTitle,
       brush: PdfBrushes.white,
-      bounds: Rect.fromLTWH(400, 0, pageSize.width - 400, 36),
+      bounds: Rect.fromLTWH(355, 0, pageSize.width - 355, 50),
       format: PdfStringFormat(
-          textDirection: PdfTextDirection.rightToLeft,
-          alignment: PdfTextAlignment.center,
-          lineAlignment: PdfVerticalAlignment.bottom));
+        textDirection: PdfTextDirection.rightToLeft,
+        lineAlignment: PdfVerticalAlignment.middle,
+      ));
   //Create data foramt and convert it to text.
   final DateFormat format = DateFormat.yMMMMd('ar');
   final String invoiceNumber =
-      'فاتورة رقم: 2058557939\r\n\r\nبتاريخ: ${format.format(DateTime.now())}';
+      'فاتورة رقم: 2058557939\r\nبتاريخ: ${format.format(DateTime.now())}';
   final Size contentSize = arabicFont.measureString(invoiceNumber);
 
   // client Name !provide client name from Order
   final String clientName = order.clientName;
-  String address = '''ااسم العميل: \r\n\r\n$clientName, ''';
+  String address = '''اسم العميل: \r\n$clientName  ''';
 
   PdfTextElement(
     text: invoiceNumber,
@@ -134,8 +140,8 @@ PdfLayoutResult drawHeader(PdfPage page, Size pageSize, PdfGrid grid,
     ),
   ).draw(
       page: page,
-      bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 120,
-          contentSize.width + 30, pageSize.height - 120));
+      bounds: Rect.fromLTWH(pageSize.width - (contentSize.width + 30), 70,
+          contentSize.width + 30, pageSize.height - 70));
 
   return PdfTextElement(
     text: address,
@@ -145,8 +151,8 @@ PdfLayoutResult drawHeader(PdfPage page, Size pageSize, PdfGrid grid,
     ),
   ).draw(
       page: page,
-      bounds: Rect.fromLTWH(30, 120, pageSize.width - (contentSize.width + 30),
-          pageSize.height - 120))!;
+      bounds: Rect.fromLTWH(30, 70, pageSize.width - (contentSize.width + 30),
+          pageSize.height - 70))!;
 }
 
 //Draws the grid
@@ -204,7 +210,7 @@ void drawFooter(PdfPage page, Size pageSize, Uint8List arabicFontBytes) {
   // Pdf footer content
   const String footerContent =
       // ignore: leading_newlines_in_multiline_strings
-      "Fouda Pharma\nMahmoud Fouda\n01157847681\nmhmdfoudaa@gmail.com";
+      "Mahmoud Fouda\n01157847681\nmhmdfoudaa@gmail.com";
 
   //Added 30 as a margin for the layout
   page.graphics.drawString(footerContent, arabicFont,

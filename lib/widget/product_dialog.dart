@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:fouda_pharma/providers/theme_provider.dart';
 
 void productContentDialog({
   required final BuildContext context,
@@ -107,7 +108,9 @@ void productContentDialog({
         FilledButton(
           child: Text(buttonTitle),
           onPressed: () {
+            final index = ref.read(getRandomIntProvider);
             onPressed(Product(
+              colorIndex: index,
               name: productNameController.text.isNotEmpty
                   ? productNameController.text
                   : '',

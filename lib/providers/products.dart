@@ -45,7 +45,7 @@ class OrderProductList extends _$OrderProductList {
         state = [
           for (final existingProduct in state)
             if (existingProduct.id == product.id)
-              existingProduct.copyWith(count: count)
+              existingProduct.copyWith(count: count!)
             else
               existingProduct,
         ];
@@ -61,7 +61,7 @@ class OrderProductList extends _$OrderProductList {
         ? state = [
             for (var product in state)
               if (product.id == productId)
-                product.copyWith(count: count)
+                product.copyWith(count: count!)
               else
                 product,
           ]
@@ -69,9 +69,6 @@ class OrderProductList extends _$OrderProductList {
   }
 
   void removeProduct(String productId) {
-    state = [
-      for (final product in state)
-        if (product.id != productId) product,
-    ];
+    state = state.where((product) => product.id != productId).toList();
   }
 }

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/client.dart';
 import 'package:fouda_pharma/screens/client_info_page.dart';
 import 'package:fouda_pharma/widget/client_dialog.dart';
+import 'package:fouda_pharma/widget/rec_widget.dart';
 
 class AllClientPage extends ConsumerWidget {
   const AllClientPage({super.key});
@@ -14,7 +17,7 @@ class AllClientPage extends ConsumerWidget {
 
     return ScaffoldPage(
       header: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
         child: Column(
           children: [
             Row(
@@ -49,41 +52,35 @@ class AllClientPage extends ConsumerWidget {
             const SizedBox(
               height: 28,
             ),
+            AutoSuggestBox.form(items: [])
           ],
         ),
       ),
       content: clientList.when(
           skipLoadingOnRefresh: false,
           data: (data) {
-            return ListView.builder(
+            return GridView.builder(
+              padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
               itemCount: data.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Platform.isAndroid ? 3 : 4,
+              ),
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 28.0,
-                    vertical: 6,
-                  ),
-                  child: ListTile(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: FluentTheme.of(context).borderInputColor,
-                          width: 1.5),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
+                  padding: EdgeInsets.all(Platform.isWindows ? 12.0 : 6.0),
+                  child: CustomInfoleWidget(
+                    colorIndex: data[index].colorIndex,
+                    phoneNumber: data[index].phoneNumber,
+                    widgetType: WidgetType.client,
+                    objectName: data[index].name,
                     onPressed: () {
-                      Navigator.of(context).push(FluentPageRoute(
-                        builder: (context) =>
-                            ClientInfoPage(client: data[index]),
-                      ));
+                      Navigator.of(context).push(
+                        FluentPageRoute(
+                          builder: (context) =>
+                              ClientInfoPage(client: data[index]),
+                        ),
+                      );
                     },
-                    title: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text(data[index].name),
-                    ),
-                    leading: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Icon(FluentIcons.contact),
-                    ),
                   ),
                 );
               },

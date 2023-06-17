@@ -7,6 +7,8 @@ import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/widget/product_count_dialog.dart';
 
+final searchTextProvider = StateProvider<String>((ref) => '');
+
 class SerchBar extends ConsumerWidget {
   const SerchBar({
     super.key,

@@ -12,31 +12,29 @@ class LocaleSegmentButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: SegmentedButton<Locale>(
-        style: const ButtonStyle(
-          shape: MaterialStatePropertyAll<OutlinedBorder>(
-            RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-              Radius.circular(5),
-            )),
-          ),
+    return SegmentedButton<Locale>(
+      style: const ButtonStyle(
+        shape: MaterialStatePropertyAll<OutlinedBorder>(
+          RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          )),
         ),
-        segments: const <ButtonSegment<Locale>>[
-          ButtonSegment<Locale>(
-            value: Locale('ar', ''),
-            label: Text('Arabic'),
-          ),
-          ButtonSegment<Locale>(
-            value: Locale('en', ''),
-            label: Text('English'),
-          ),
-        ],
-        selected: <Locale>{locale},
-        onSelectionChanged: (Set<Locale> value) {
-          ref.read(localizationProvider.notifier).changeLocale(value.first);
-        },
       ),
+      segments: const <ButtonSegment<Locale>>[
+        ButtonSegment<Locale>(
+          value: Locale('ar', ''),
+          label: Text('Arabic'),
+        ),
+        ButtonSegment<Locale>(
+          value: Locale('en', ''),
+          label: Text('English'),
+        ),
+      ],
+      selected: <Locale>{locale},
+      onSelectionChanged: (Set<Locale> value) {
+        ref.read(localizationProvider.notifier).changeLocale(value.first);
+      },
     );
   }
 }

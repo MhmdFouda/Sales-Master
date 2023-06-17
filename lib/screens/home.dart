@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
@@ -17,11 +19,60 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final double horizontal = Platform.isAndroid ? 15 : 30;
     final productList = ref.watch(orderProductListProvider);
     final totalPrice =
         ref.watch(orderProductListProvider.notifier).totalPrice();
-    final publicTotalPrice =
-        ref.watch(orderProductListProvider.notifier).publicTotalPrice();
+    // final publicTotalPrice =
+    //     ref.watch(orderProductListProvider.notifier).publicTotalPrice();
+    final List<Widget> children = [
+      FilledButton(
+        //confirm order
+        child: Platform.isWindows
+            ? Text(context.loc.confirmorder)
+            : const Icon(
+                FluentIcons.check_mark,
+                size: 16,
+              ),
+        onPressed: () {
+          confirmDialog(context, ref, productList);
+        },
+      ),
+      const SizedBox(width: 40),
+      Button(
+        // reset order
+        child: Platform.isWindows
+            ? Text(context.loc.resetorder)
+            : const Icon(
+                FluentIcons.delete,
+                size: 16,
+              ),
+        onPressed: () {
+          if (productList.isNotEmpty) {
+            ref.read(orderProductListProvider.notifier).reset();
+            ref.read(orderProductListProvider.notifier).close();
+          }
+        },
+      ),
+      const Spacer(flex: 3),
+      Container(
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            width: 1.5,
+            color: ref
+                .watch(themeDataProvider.notifier)
+                .systemAccentColor()
+                .lighter,
+          ),
+        ),
+        child: Text(
+          "${context.loc.totalorderprice}  :   $totalPrice  ${context.loc.egp}",
+          style: const TextStyle(fontSize: 14),
+        ),
+      )
+    ];
     return ScaffoldPage(
       header: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -33,61 +84,18 @@ class HomePage extends ConsumerWidget {
       ),
       bottomBar: (productList.isNotEmpty)
           ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                    //confirm order
-                    child: Text(context.loc.confirmorder),
-                    onPressed: () {
-                      confirmDialog(context, ref, productList);
-                    },
-                  ),
-                  const SizedBox(width: 20),
-                  Button(
-                    // reset order
-                    child: Text(context.loc.resetorder),
-                    onPressed: () {
-                      if (productList.isNotEmpty) {
-                        ref.read(orderProductListProvider.notifier).reset();
-                        ref.read(orderProductListProvider.notifier).close();
-                      }
-                    },
-                  ),
-                  const Spacer(flex: 3),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(6),
-                      border: Border.all(
-                        width: 1.5,
-                        color: ref
-                            .watch(themeDataProvider.notifier)
-                            .systemAccentColor()
-                            .lighter,
-                      ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: horizontal, vertical: 16),
+              child: Platform.isWindows
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: children,
+                    )
+                  : Row(
+                      children: children.reversed.toList(),
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          "${context.loc.totalorderprice}  :   $totalPrice  ${context.loc.egp}",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                        const SizedBox(
-                          width: 40,
-                        ),
-                        Text(
-                          " ${context.loc.public}  :   $publicTotalPrice  ${context.loc.egp}",
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
             )
-          : const Row(),
+          : const SizedBox(),
     );
   }
 
@@ -124,6 +132,7 @@ class HomePage extends ConsumerWidget {
                   update: false,
                   onPressed: (newClient) {
                     ref.read(asyncClientProvider.notifier).addClient(newClient);
+                    Navigator.of(context).pop();
                   },
                 ),
               )

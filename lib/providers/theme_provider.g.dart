@@ -6,7 +6,21 @@ part of 'theme_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeDataHash() => r'33ffa19c55150ec019a0240650e1dc70816d6af4';
+String _$getRandomIntHash() => r'dd2f99aed3c71dc738f261b072fd713bae7a32b8';
+
+/// See also [getRandomInt].
+@ProviderFor(getRandomInt)
+final getRandomIntProvider = AutoDisposeProvider<int>.internal(
+  getRandomInt,
+  name: r'getRandomIntProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getRandomIntHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetRandomIntRef = AutoDisposeProviderRef<int>;
+String _$themeDataHash() => r'f936563aa277a75d6f380be737049a17dbe65d0b';
 
 /// See also [ThemeData].
 @ProviderFor(ThemeData)

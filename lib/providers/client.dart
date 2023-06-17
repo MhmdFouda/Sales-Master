@@ -34,7 +34,7 @@ class AsyncClient extends _$AsyncClient {
     state = await AsyncValue.guard(
       () async {
         final clientCollection = Firestore.instance.collection('clients');
-        final docRef = await clientCollection.add(client.toMap());
+        final docRef = await clientCollection.add(client.toJson());
         final id = docRef.id;
         await docRef.reference.update({'id': id});
         return _fetchClient();
@@ -48,7 +48,7 @@ class AsyncClient extends _$AsyncClient {
     state = await AsyncValue.guard(
       () async {
         final clientCollection = Firestore.instance.collection('clients');
-        await clientCollection.document(client.id!).update(client.toMap());
+        await clientCollection.document(client.id!).update(client.toJson());
         return _fetchClient();
       },
     );

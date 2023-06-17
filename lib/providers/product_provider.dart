@@ -1,17 +1,12 @@
 import 'dart:async';
 import 'package:firedart/firedart.dart';
+import 'package:fouda_pharma/models/product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../models/product.dart';
 part 'product_provider.g.dart';
 
 @riverpod
 class AsyncProducts extends _$AsyncProducts {
-  @override
-  FutureOr<List<Product>> build() async {
-    return _fetchProduct();
-  }
-
   Future<List<Product>> _fetchProduct() async {
     final productCollection = Firestore.instance.collection('products');
     final documents = await productCollection.get();
@@ -20,6 +15,11 @@ class AsyncProducts extends _$AsyncProducts {
       productList.add(Product.fromSnapshot(doc));
     }
     return productList;
+  }
+
+  @override
+  FutureOr<List<Product>> build() async {
+    return _fetchProduct();
   }
 
   Future<Product> getProduct(String id) async {
@@ -33,7 +33,7 @@ class AsyncProducts extends _$AsyncProducts {
     state = await AsyncValue.guard(
       () async {
         final productCollection = Firestore.instance.collection('products');
-        await productCollection.add(product.toMap());
+        await productCollection.add(product.toJson());
         return _fetchProduct();
       },
     );
@@ -41,11 +41,10 @@ class AsyncProducts extends _$AsyncProducts {
 
   // update product
   Future<void> updateProduct(Product product) async {
-    state = const AsyncValue.loading();
     state = await AsyncValue.guard(
       () async {
         final productCollection = Firestore.instance.collection('products');
-        await productCollection.document(product.id!).update(product.toMap());
+        await productCollection.document(product.id!).update(product.toJson());
         return _fetchProduct();
       },
     );

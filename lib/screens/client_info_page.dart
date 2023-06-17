@@ -42,8 +42,7 @@ class ClientInfoPage extends ConsumerWidget {
               Text(
                 client.name,
                 style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 38,
                 ),
               ),
               const SizedBox(
@@ -52,14 +51,14 @@ class ClientInfoPage extends ConsumerWidget {
               ListTile(
                 leading: const Icon(
                   FluentIcons.phone,
-                  size: 30,
+                  size: 16,
                 ),
                 title: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     client.phoneNumber.toString(),
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
                 ),
@@ -67,14 +66,14 @@ class ClientInfoPage extends ConsumerWidget {
               ListTile(
                 leading: const Icon(
                   FluentIcons.phone,
-                  size: 30,
+                  size: 16,
                 ),
                 title: Padding(
                   padding: const EdgeInsets.only(left: 8.0),
                   child: Text(
                     client.secPhoneNumber.toString(),
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
                 ),

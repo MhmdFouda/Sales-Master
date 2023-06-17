@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/screens/order_info_page.dart';
+import 'package:fouda_pharma/widget/rec_widget.dart';
 
 class HistoryPage extends ConsumerWidget {
   const HistoryPage({super.key});
@@ -14,65 +17,52 @@ class HistoryPage extends ConsumerWidget {
     return ScaffoldPage(
       header: Padding(
         padding: const EdgeInsets.all(30),
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: Text(
-                context.loc.history,
-                style: const TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    context.loc.history,
+                    style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
+            const SizedBox(
+              height: 28,
+            ),
+            AutoSuggestBox.form(items: [])
           ],
         ),
       ),
       content: orderList.when(data: (data) {
         return ListView.builder(
+          padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
           itemCount: data.length,
           itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 28.0,
-                vertical: 6,
-              ),
-              child: ListTile(
-                onPressed: () {
-                  Navigator.of(context).push(FluentPageRoute(
-                    builder: (context) => OrderInfoPage(order: data[index]),
-                  ));
-                },
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                      color: FluentTheme.of(context).borderInputColor,
-                      width: 1.5),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Row(
-                    children: [
-                      Text(
-                        ref.watch(
-                          dateFormaterProvider(data[index].confirmTime),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Text(ref.watch(
-                        timeFormaterProvider(data[index].confirmTime),
-                      ))
-                    ],
+            return SizedBox(
+              height: 160,
+              child: Padding(
+                padding: EdgeInsets.all(Platform.isWindows ? 12.0 : 6.0),
+                child: CustomInfoleWidget(
+                  colorIndex: data[index].colorIndex,
+                  widgetType: WidgetType.order,
+                  objectName: data[index].clientName,
+                  date: ref.watch(
+                    timeFormaterProvider(
+                      data[index].confirmTime,
+                    ),
                   ),
-                ),
-                title: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text(data[index].clientName),
-                ),
-                trailing: Text(
-                  data[index].totalPrice.toString(),
+                  total: data[index].totalPrice.toString(),
+                  onPressed: () {
+                    Navigator.of(context).push(FluentPageRoute(
+                      builder: (context) => OrderInfoPage(order: data[index]),
+                    ));
+                  },
                 ),
               ),
             );

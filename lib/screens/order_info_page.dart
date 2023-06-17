@@ -17,6 +17,8 @@ class OrderInfoPage extends ConsumerWidget {
   final Order order;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final headerSize = Platform.isWindows ? 42.0 : 24.0;
+    final subHeaderSize = Platform.isWindows ? 28.0 : 18.0;
     final List<Product> orderProducts = order.products;
     return NavigationView(
       appBar: NavigationAppBar(
@@ -45,15 +47,15 @@ class OrderInfoPage extends ConsumerWidget {
                 children: [
                   Text(
                     order.clientName,
-                    style: const TextStyle(
-                      fontSize: 48,
+                    style: TextStyle(
+                      fontSize: headerSize,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    '${context.loc.totalorderprice} : ${order.totalPrice}',
-                    style: const TextStyle(
-                      fontSize: 28,
+                    '${order.totalPrice}  \$',
+                    style: TextStyle(
+                      fontSize: subHeaderSize,
                     ),
                   ),
                 ],
@@ -61,13 +63,10 @@ class OrderInfoPage extends ConsumerWidget {
               const SizedBox(
                 height: 26,
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  ref.watch(dateFormaterProvider(order.confirmTime)),
-                  style: const TextStyle(
-                    fontSize: 28,
-                  ),
+              Text(
+                ref.watch(dateFormaterProvider(order.confirmTime)),
+                style: TextStyle(
+                  fontSize: subHeaderSize,
                 ),
               ),
             ],
@@ -84,7 +83,7 @@ class OrderInfoPage extends ConsumerWidget {
               children: [
                 FilledButton(
                   child: const Text("print"),
-                  onPressed: () => generateInvoice(order, context),
+                  onPressed: () => generateInvoice(order, context, ref),
                 ),
                 const SizedBox(
                   width: 20,
@@ -97,6 +96,7 @@ class OrderInfoPage extends ConsumerWidget {
                     ref
                         .read(asyncOrderProviderProvider.notifier)
                         .deleteOrder(order.id!);
+                    Navigator.pop(context);
                   },
                 ),
               ],

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/screens/product_info_page.dart';
 import 'package:fouda_pharma/widget/product_dialog.dart';
+import 'package:fouda_pharma/widget/rec_widget.dart';
 
 class AllProductList extends ConsumerWidget {
   const AllProductList({
@@ -15,7 +18,7 @@ class AllProductList extends ConsumerWidget {
     final products = ref.watch(asyncProductsProvider);
     return ScaffoldPage(
       header: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
         child: Column(
           children: [
             Row(
@@ -49,42 +52,32 @@ class AllProductList extends ConsumerWidget {
             const SizedBox(
               height: 28,
             ),
+            AutoSuggestBox.form(items: [])
           ],
         ),
       ),
       content: products.when(
         data: (data) {
-          return ListView.builder(
+          return GridView.builder(
+            padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
             itemCount: data.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: Platform.isAndroid ? 3 : 5,
+            ),
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
-                  horizontal: 28,
-                ),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                        color: FluentTheme.of(context).borderInputColor,
-                        width: 1.5),
-                    borderRadius: BorderRadius.circular(6),
-                  ),
+                padding: EdgeInsets.all(Platform.isWindows ? 12.0 : 6.0),
+                child: CustomInfoleWidget(
+                  colorIndex: data[index].colorIndex,
+                  widgetType: WidgetType.product,
+                  objectName: data[index].name,
+                  count: data[index].count,
                   onPressed: () {
                     Navigator.of(context).push(FluentPageRoute(
                       builder: (context) =>
                           ProductInfoPage(product: data[index]),
                     ));
                   },
-                  title: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(data[index].name),
-                  ),
-                  trailing: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      data[index].count.toString(),
-                    ),
-                  ),
                 ),
               );
             },

@@ -1,6 +1,7 @@
 import 'package:firedart/firedart.dart';
 import 'package:fouda_pharma/models/order.dart';
 import 'package:fouda_pharma/providers/products.dart';
+import 'package:fouda_pharma/providers/theme_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_provider.g.dart';
@@ -30,11 +31,13 @@ class AsyncOrderProvider extends _$AsyncOrderProvider {
         ref.watch(orderProductListProvider.notifier).totalPrice();
     final publicTotalPrice =
         ref.watch(orderProductListProvider.notifier).publicTotalPrice();
+    final index = ref.watch(getRandomIntProvider);
     final order = Order(
       products: products,
       clientName: clientName ?? '',
       totalPrice: totalprice,
       publicTotalPrice: publicTotalPrice,
+      colorIndex: index,
     );
     final collection = Firestore.instance.collection('orders');
     final docRef = await collection.add(order.toMap());

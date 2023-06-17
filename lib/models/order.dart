@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:firedart/firedart.dart';
 import 'package:flutter/foundation.dart';
 
@@ -11,6 +13,7 @@ class Order {
   final double totalPrice;
   final double publicTotalPrice;
   final DateTime confirmTime;
+  final int colorIndex;
 
   Order({
     DateTime? confirmTime,
@@ -19,16 +22,18 @@ class Order {
     required this.clientName,
     required this.totalPrice,
     required this.publicTotalPrice,
+    required this.colorIndex,
   }) : confirmTime = confirmTime ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'products': products.map((x) => x.toMap()).toList(),
+      'products': products.map((x) => x.toJson()).toList(),
       'id': id,
       'clientName': clientName,
       'totalPrice': totalPrice,
       'publicTotalPrice': publicTotalPrice,
       'confirmTime': confirmTime.millisecondsSinceEpoch,
+      'colorIndex': colorIndex,
     };
   }
 
@@ -36,7 +41,7 @@ class Order {
     return Order(
       products: List<Product>.from(
         (map['products'] as List<int>).map<Product>(
-          (x) => Product.fromMap(x as Map<String, dynamic>),
+          (x) => Product.fromJson(x as Map<String, dynamic>),
         ),
       ),
       id: map['id'] != null ? map['id'] as String : null,
@@ -45,12 +50,13 @@ class Order {
       publicTotalPrice: map['publicTotalPrice'] as double,
       confirmTime:
           DateTime.fromMillisecondsSinceEpoch(map['confirmTime'] as int),
+      colorIndex: map['colorIndex'] as int,
     );
   }
 
   factory Order.fromSnapshot(Document doc) {
     final List<Product> products = List<Product>.from(
-        (doc['products']).map((product) => Product.fromMap(product)));
+        (doc['products']).map((product) => Product.fromJson(product)));
 
     final int confirmTimeMillis = doc['confirmTime'] as int;
     final DateTime confirmTime =
@@ -63,6 +69,7 @@ class Order {
       totalPrice: doc['totalPrice'].toDouble(),
       publicTotalPrice: doc['publicTotalPrice'].toDouble(),
       confirmTime: confirmTime,
+      colorIndex: doc['colorIndex'].toInt(),
     );
   }
 
@@ -73,6 +80,7 @@ class Order {
     double? totalPrice,
     double? publicTotalPrice,
     DateTime? confirmTime,
+    int? colorIndex,
   }) {
     return Order(
       products: products ?? this.products,
@@ -81,6 +89,7 @@ class Order {
       totalPrice: totalPrice ?? this.totalPrice,
       publicTotalPrice: publicTotalPrice ?? this.publicTotalPrice,
       confirmTime: confirmTime ?? this.confirmTime,
+      colorIndex: colorIndex ?? this.colorIndex,
     );
   }
 }

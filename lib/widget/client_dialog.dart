@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/client.dart';
+import 'package:fouda_pharma/providers/theme_provider.dart';
 
 void clientContentDialog({
   required final BuildContext context,
@@ -61,6 +62,7 @@ void clientContentDialog({
         FilledButton(
           child: Text(buttonTitle),
           onPressed: () {
+            final index = ref.read(getRandomIntProvider);
             onPressed(
               Client(
                   name: clientNameController.text.isNotEmpty
@@ -71,7 +73,8 @@ void clientContentDialog({
                       : '',
                   secPhoneNumber: clientSecNumController.text.isNotEmpty
                       ? clientSecNumController.text
-                      : ''),
+                      : '',
+                  colorIndex: index),
             );
           },
         ),
