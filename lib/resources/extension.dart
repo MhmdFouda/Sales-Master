@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension ColorExtension on Color {
-  Color generateShade(BuildContext context, {double amount = 0.12}) {
+  Color generateShade(BuildContext context, double amount) {
     final Brightness brightness = Theme.of(context).brightness;
     final double adjustedAmount =
         brightness == Brightness.dark ? -amount : amount;

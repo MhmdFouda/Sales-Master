@@ -8,6 +8,7 @@ import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
+import 'package:fouda_pharma/widget/price_per_day.dart';
 
 class ProductList extends ConsumerWidget {
   const ProductList({
@@ -81,15 +82,7 @@ class ProductList extends ConsumerWidget {
     ];
 
     if (productList.isEmpty) {
-      return const Align(
-        child: Text(
-          'Sales Master',
-          style: TextStyle(
-            fontSize: 60,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      );
+      return const TimePriceAxis();
     } else {
       if (Platform.isAndroid) {
         return SingleChildScrollView(

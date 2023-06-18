@@ -209,14 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: e35129dc44c9118cee2a5603506d823bab99c68393879edb440e0090d07586be
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   custom_lint:
     dependency: "direct dev"
     description:
@@ -277,10 +269,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: e9b36b391690cf329c6fb1de220045e97c13784c303820cd33962319580a56c6
+      sha256: a4a99204da264a0aa9d54a332ea0315ce7b0768075139c77abefe98093dd98be
       url: "https://pub.dev"
     source: hosted
-    version: "2.13.1"
+    version: "2.14.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -293,10 +285,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: "8c0f4c87d20e2d001a5915df238c1f9c88704231f591324205f5a5d2a7740a45"
+      sha256: "0fd5c4b228de29b55fac38aed0d9e42514b3d3bd47675de52bf7f8fccaf922fa"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.0"
   firedart:
     dependency: "direct main"
     description:
@@ -397,14 +389,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
-  google_fonts:
-    dependency: "direct main"
-    description:
-      name: google_fonts
-      sha256: "6b6f10f0ce3c42f6552d1c70d2c28d764cf22bb487f50f66cca31dcd5194f4d6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.4"
   googleapis_auth:
     dependency: transitive
     description:
@@ -954,14 +938,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: "5f868f5a82380ef1b3de416b7812e1ac7acce6a629f9281618adee81d90716cc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "21.2.10"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "4aa69e3541d38810533b1455aa38997a89755f9928e16ef813b62b2e8bcc398c"
+      sha256: "8db8f55c77f56968681447d3837c10f27a9e861e238a898fda116c7531def979"
       url: "https://pub.dev"
     source: hosted
-    version: "21.2.9"
+    version: "21.2.10"
   syncfusion_flutter_pdf:
     dependency: "direct main"
     description:

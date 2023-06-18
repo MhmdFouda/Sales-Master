@@ -42,14 +42,14 @@ class ThemeData extends _$ThemeData {
 
   FluentThemeData lightTheme() {
     return FluentThemeData(
-      acrylicBackgroundColor: Colors.purple.lightest.withOpacity(.7),
-      menuColor: Colors.purple.lighter.withOpacity(.5),
+      // scaffoldBackgroundColor: Colors.purple.lightest,
+      acrylicBackgroundColor: Colors.purple.lightest,
+      menuColor: Colors.purple.lighter.withOpacity(.7),
       brightness: Brightness.light,
       accentColor: Colors.purple,
-      activeColor: Colors.purple,
       typography: Typography.fromBrightness(
         brightness: Brightness.light,
-        color: Colors.purple.darkest.toAccentColor(darkestFactor: .7),
+        color: Colors.purple.darkest.toAccentColor(darkestFactor: .9),
       ),
       dialogTheme: ContentDialogThemeData(
         barrierColor: Colors.purple.lighter,
@@ -77,18 +77,19 @@ class ThemeData extends _$ThemeData {
             fontSize: 18.0,
           ),
         ),
-        highlightColor: Colors.purple.darker,
-        backgroundColor: Colors.purple.lightest,
+        highlightColor: Colors.purple.lightest,
+        backgroundColor: Colors.purple.lighter,
       ),
     );
   }
 
   FluentThemeData darkTheme() {
     return FluentThemeData(
+      // scaffoldBackgroundColor: Colors.purple.darkest,
       acrylicBackgroundColor: Colors.purple.darkest,
       menuColor: Colors.purple.darker.withOpacity(.5),
       brightness: Brightness.dark,
-      accentColor: Colors.purple,
+      accentColor: Colors.yellow,
       typography: Typography.fromBrightness(
         brightness: Brightness.light,
         color: Colors.white.toAccentColor(),
@@ -156,22 +157,24 @@ int getRandomInt(GetRandomIntRef ref) {
 }
 
 final List<material.Color?> lightModeColors = [
-  material.Colors.purple[200],
-  material.Colors.brown[200],
-  material.Colors.pink[200],
-  material.Colors.blue[200],
-  material.Colors.red[200],
-  material.Colors.teal[200],
-  material.Colors.cyan[200],
-  material.Colors.indigo[200],
+  material.Colors.purple[100],
+  material.Colors.brown[100],
+  material.Colors.pink[100],
+  material.Colors.blue[100],
+  material.Colors.red[100],
+  material.Colors.teal[100],
+  material.Colors.cyan[100],
+  material.Colors.indigo[100],
+  material.Colors.lime[100],
 ];
 final List<material.Color?> darkModeColors = [
-  material.Colors.purple[700],
-  material.Colors.brown[700],
+  material.Colors.purple[600],
+  material.Colors.purple[900],
   material.Colors.pink[700],
-  material.Colors.blue[700],
-  material.Colors.red[700],
-  material.Colors.teal[700],
-  material.Colors.cyan[700],
-  material.Colors.indigo[700],
+  material.Colors.blue[600],
+  material.Colors.blueGrey[800],
+  material.Colors.teal[600],
+  material.Colors.cyan[600],
+  material.Colors.indigo[600],
+  material.Colors.lime[600],
 ];

@@ -38,7 +38,7 @@ class CustomInfoleWidget extends ConsumerWidget {
     final color =
         ref.watch(themeDataProvider.notifier).getColor(context, colorIndex)!;
     return Material(
-      elevation: 5.0, // Adjust the elevation value as needed
+      elevation: 4.0, // Adjust the elevation value as needed
       color: Colors.transparent,
       borderRadius: BorderRadius.circular(16.0),
       child: Ink(
@@ -206,7 +206,7 @@ class CustomBadgeWidget extends StatelessWidget {
         width: getWidth(type),
         height: getHight(type),
         decoration: BoxDecoration(
-            color: color.generateShade(context),
+            color: color.generateShade(context, 0.12),
             shape: shape,
             borderRadius:
                 !isSircle ? const BorderRadius.all(Radius.circular(16)) : null),
