@@ -1,78 +1,119 @@
 import 'dart:io';
-
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
+import 'package:fouda_pharma/screens/custom_container.dart';
 import 'package:fouda_pharma/screens/order_info_page.dart';
-import 'package:fouda_pharma/widget/rec_widget.dart';
 
-class HistoryPage extends ConsumerWidget {
+class HistoryPage extends StatelessWidget {
   const HistoryPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final orderList = ref.watch(asyncOrderProviderProvider);
+  Widget build(BuildContext context) {
     return ScaffoldPage(
-      header: Padding(
-        padding: const EdgeInsets.all(30),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    context.loc.history,
-                    style: const TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
+      resizeToAvoidBottomInset: false,
+      header: ReusableContainer(
+        child: Padding(
+          padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      context.loc.history,
+                      style: const TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 28,
-            ),
-            AutoSuggestBox.form(items: [])
-          ],
+                ],
+              ),
+              const SizedBox(
+                height: 28,
+              ),
+              AutoSuggestBox.form(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: FluentTheme.of(context).accentColor,
+                      ),
+                      borderRadius: BorderRadius.circular(6)),
+                  items: const [])
+            ],
+          ),
         ),
       ),
-      content: orderList.when(data: (data) {
-        return ListView.builder(
-          padding: EdgeInsets.all(Platform.isWindows ? 28.0 : 12.0),
+      content: const ReusableContainer(
+          child: OrdersList(
+        isAll: true,
+      )),
+      bottomBar: const SizedBox(
+        height: 10,
+      ),
+    );
+  }
+}
+
+class OrdersList extends ConsumerWidget {
+  final bool isAll;
+  final String? clientName;
+  const OrdersList({
+    super.key,
+    required this.isAll,
+    this.clientName,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final orderList = isAll
+        ? ref.watch(asyncOrderProviderProvider)
+        : ref.watch(asyncFilterdOrderProvider(clientName!));
+    return orderList.when(data: (data) {
+      return material.RefreshIndicator(
+        onRefresh: () => ref.refresh(asyncOrderProviderProvider.future),
+        child: ListView.separated(
           itemCount: data.length,
           itemBuilder: (context, index) {
-            return SizedBox(
-              height: 160,
-              child: Padding(
-                padding: EdgeInsets.all(Platform.isWindows ? 12.0 : 6.0),
-                child: CustomInfoleWidget(
-                  colorIndex: data[index].colorIndex,
-                  widgetType: WidgetType.order,
-                  objectName: data[index].clientName,
-                  date: ref.watch(
-                    timeFormaterProvider(
-                      data[index].confirmTime,
-                    ),
+            return ListTile(
+              onPressed: () {
+                Navigator.of(context).push(
+                  FluentPageRoute(
+                    builder: (context) =>
+                        OrderInfoPage(noId: false, order: data[index]),
                   ),
-                  total: data[index].totalPrice.toString(),
-                  onPressed: () {
-                    Navigator.of(context).push(FluentPageRoute(
-                      builder: (context) => OrderInfoPage(order: data[index]),
-                    ));
-                  },
+                );
+              },
+              trailing: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text("${data[index].totalPrice} EGP"),
+              ),
+              title: Text(
+                data[index].clientName,
+                style: const TextStyle(fontSize: 16),
+              ),
+              subtitle: Text(
+                ref.watch(
+                  dateFormaterProvider(
+                    data[index].confirmTime,
+                  ),
                 ),
+                style: const TextStyle(fontSize: 14),
               ),
             );
           },
-        );
-      }, error: (error, stackTrace) {
-        return Text(error.toString());
-      }, loading: () {
-        return const Center(child: ProgressBar());
-      }),
-    );
+          separatorBuilder: (BuildContext context, int index) {
+            return const Divider();
+          },
+        ),
+      );
+    }, error: (error, stackTrace) {
+      return Text(error.toString());
+    }, loading: () {
+      return const Center(child: ProgressBar());
+    });
   }
 }

@@ -1,7 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: non_constant_identifier_names
-
 part of 'product.dart';
 
 // **************************************************************************
@@ -15,7 +13,7 @@ _$_Product _$$_ProductFromJson(Map<String, dynamic> json) => _$_Product(
       publicPrice: (json['publicPrice'] as num).toDouble(),
       unitType: json['unitType'] as String,
       count: json['count'] as int,
-      minCount: json['minCount'] as int,
+      minCount: json['minCount'] as int?,
       intialCount: json['intialCount'] as int,
       colorIndex: json['colorIndex'] as int,
     );

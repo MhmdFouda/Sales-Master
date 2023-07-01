@@ -5,7 +5,7 @@ import 'package:fouda_pharma/models/product.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
 
-class CountDialog extends ConsumerStatefulWidget {
+class CountDialog extends ConsumerWidget {
   const CountDialog({
     super.key,
     required this.product,
@@ -13,39 +13,29 @@ class CountDialog extends ConsumerStatefulWidget {
   final Product product;
 
   @override
-  ConsumerState<CountDialog> createState() => _DialogState();
-}
-
-class _DialogState extends ConsumerState<CountDialog> {
-  //* cant define var insid build method of statfuel widget
-  //* because when we call setState(){} the widget rebuild
-  //* and then our var like [count] here well get the intial value again
-  int count = 0;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // get the max count of the product avilable on store
     int getMax() {
       final products = ref.watch(asyncProductsProvider).asData?.value ?? [];
-      for (var product in products) {
-        if (product.id == widget.product.id) {
+      for (final asyncproduct in products) {
+        if (asyncproduct.id == product.id) {
           return product.count;
         }
       }
       return 0;
     }
 
+    int count = 0;
+
     return ContentDialog(
       title: Text(context.loc.count),
-      content: NumberBox(
+      content: NumberBox<int>(
         min: 0,
         max: getMax(),
         clearButton: false,
         value: count,
         onChanged: (value) {
-          setState(() {
-            count = value!;
-          });
+          count = value!;
         },
         mode: SpinButtonPlacementMode.inline,
       ),
@@ -53,7 +43,7 @@ class _DialogState extends ConsumerState<CountDialog> {
         FilledButton(
           onPressed: () {
             ref.read(orderProductListProvider.notifier).addProduct(
-                  widget.product.copyWith(count: count),
+                  product.copyWith(count: count),
                   count,
                 );
 
@@ -61,6 +51,12 @@ class _DialogState extends ConsumerState<CountDialog> {
           },
           child: Text(context.loc.add),
         ),
+        Button(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text(context.loc.cansel),
+        )
       ],
     );
   }

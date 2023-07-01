@@ -1,7 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-// ignore_for_file: non_constant_identifier_names
-
 part of 'client.dart';
 
 // **************************************************************************
@@ -13,7 +11,8 @@ _$_Client _$$_ClientFromJson(Map<String, dynamic> json) => _$_Client(
       name: json['name'] as String,
       phoneNumber: json['phoneNumber'] as String?,
       secPhoneNumber: json['secPhoneNumber'] as String?,
-      colorIndex: json['colorIndex'] as int,
+      balance: (json['balance'] as num?)?.toDouble(),
+      credit: (json['credit'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$_ClientToJson(_$_Client instance) => <String, dynamic>{
@@ -21,5 +20,6 @@ Map<String, dynamic> _$$_ClientToJson(_$_Client instance) => <String, dynamic>{
       'name': instance.name,
       'phoneNumber': instance.phoneNumber,
       'secPhoneNumber': instance.secPhoneNumber,
-      'colorIndex': instance.colorIndex,
+      'balance': instance.balance,
+      'credit': instance.credit,
     };

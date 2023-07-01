@@ -9,9 +9,12 @@ import 'package:fouda_pharma/screens/all_clients_page.dart';
 import 'package:fouda_pharma/screens/all_orders.dart';
 import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
-import 'package:fouda_pharma/widget/darkmod_toggle.dart';
+import 'package:fouda_pharma/screens/all_suppliers.dart';
+import 'package:fouda_pharma/widget/Reusable/darkmod_toggle.dart';
+import 'package:fouda_pharma/widget/charts/analyze_card.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:intl/intl.dart';
+import 'package:nil/nil.dart';
 import 'package:window_manager/window_manager.dart';
 
 class NavigationPage extends ConsumerStatefulWidget {
@@ -48,7 +51,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   @override
   Widget build(BuildContext context) {
     final hourFormat = int.parse(DateFormat('H').format(DateTime.now()));
-
+    final count = ref.watch(productCountProvider);
     List<NavigationPaneItem> items = [
       PaneItemSeparator(),
       PaneItem(
@@ -66,6 +69,21 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
         body: const AllClientPage(),
       ),
       PaneItem(
+        icon: const Icon(
+          FluentIcons.contact,
+        ),
+        title: const Text("الموردين"),
+        body: const SuppliersPage(),
+      ),
+      PaneItem(
+        infoBadge: InfoBadge(
+          source: FittedBox(
+            fit: BoxFit.contain,
+            child: Text(
+              count.value.toString(),
+            ),
+          ),
+        ),
         icon: const Icon(
           FluentIcons.product,
         ),
@@ -87,6 +105,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
       },
       child: NavigationView(
         appBar: NavigationAppBar(
+          height: Platform.isAndroid ? 25 : 56,
           title: Platform.isWindows
               ? DragToMoveArea(
                   child: Align(
@@ -136,9 +155,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
                       padding: EdgeInsetsDirectional.only(end: 8.0),
                       child: DarkModToggle(),
                     ),
-                    Platform.isWindows
-                        ? const WindowButtons()
-                        : const SizedBox(),
+                    Platform.isWindows ? const WindowButtons() : nil,
                   ],
                 )
               : null,
@@ -147,17 +164,18 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
         key: viewKey,
         pane: NavigationPane(
             size: const NavigationPaneSize(
-              compactWidth: 55,
-              openMaxWidth: 230,
+              headerHeight: 58,
             ),
             header: (hourFormat >= 0 && hourFormat < 12)
                 ? Text(context.loc.mornning)
                 : Text(context.loc.evenning),
             selected: index,
-            onChanged: (value) => setState(() => index = value),
+            onChanged: (value) => setState(
+                  () => index = value,
+                ),
             displayMode: Platform.isWindows
                 ? PaneDisplayMode.compact
-                : PaneDisplayMode.auto,
+                : PaneDisplayMode.minimal,
             items: items,
             footerItems: [
               PaneItemSeparator(),

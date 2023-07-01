@@ -43,106 +43,82 @@ class _AuthPageState extends ConsumerState<AuthPage> with WindowListener {
   @override
   Widget build(BuildContext context) {
     return NavigationView(
-      appBar: NavigationAppBar(
-        title: const DragToMoveArea(
-          child: Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Center(child: Text('Sales Master')),
+        appBar: NavigationAppBar(
+          title: const DragToMoveArea(
+            child: Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: Center(child: Text('Sales Master')),
+            ),
           ),
+          actions: Platform.isWindows ? const WindowButtons() : null,
+          automaticallyImplyLeading: false,
         ),
-        actions: Platform.isWindows ? const WindowButtons() : null,
-        automaticallyImplyLeading: false,
-      ),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              const Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Sales Master',
-                      style: TextStyle(
-                        fontSize: 48,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 32),
-                    Text(
-                      'Sales management system',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                    Text(
-                      'Designed by: Mhmd Fouda',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    )
-                  ],
-                ),
+        content: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 45),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            const Text(
+              'Sales Master',
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InfoLabel(
-                        label: context.loc.signinmail,
-                        child: TextBox(
-                          enableSuggestions: true,
-                          keyboardType: TextInputType.emailAddress,
-                          controller: eController,
-                          placeholder: context.loc.mail,
-                          expands: false,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      InfoLabel(
-                        label: context.loc.pass,
-                        child: TextBox(
-                          obscureText: obscure,
-                          controller: pController,
-                          placeholder: context.loc.pass,
-                          expands: false,
-                          suffix: Button(
-                              onPressed: () {
-                                setState(() {
-                                  obscure = !obscure;
-                                });
-                              },
-                              child: obscure
-                                  ? const Icon(FluentIcons.red_eye)
-                                  : const Icon(FluentIcons.hide3)),
-                          suffixMode: OverlayVisibilityMode.editing,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+            const SizedBox(height: 32),
+            const Text(
+              'Sales management system',
+              style: TextStyle(
+                fontSize: 20,
               ),
-            ],
-          ),
-          const SizedBox(height: 40),
-          FilledButton(
-            child: Text(context.loc.signin),
-            onPressed: () {
-              ref.read(
-                signInProvider(
-                  email: eController.text,
-                  password: pController.text,
-                ),
+            ),
+            const Text(
+              'Designed by: Mhmd Fouda',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            TextBox(
+              enableSuggestions: true,
+              keyboardType: TextInputType.emailAddress,
+              controller: eController,
+              placeholder: context.loc.mail,
+              expands: false,
+            ),
+            const SizedBox(height: 16),
+            TextBox(
+              obscureText: obscure,
+              controller: pController,
+              placeholder: context.loc.pass,
+              expands: false,
+              suffix: Button(
+                  onPressed: () {
+                    setState(() {
+                      obscure = !obscure;
+                    });
+                  },
+                  child: obscure
+                      ? const Icon(FluentIcons.red_eye)
+                      : const Icon(FluentIcons.hide3)),
+              suffixMode: OverlayVisibilityMode.editing,
+            ),
+            const SizedBox(height: 40),
+            Builder(builder: (context) {
+              return FilledButton(
+                child: Text(context.loc.signin),
+                onPressed: () {
+                  ref.read(
+                    signInProvider(
+                      email: eController.text,
+                      password: pController.text,
+                    ),
+                  );
+                },
               );
-            },
-          ),
-        ],
-      ),
-    );
+            })
+          ]),
+        ));
   }
 
   @override

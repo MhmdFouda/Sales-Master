@@ -1,9 +1,9 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart ' as material;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:system_theme/system_theme.dart';
 part 'theme_provider.g.dart';
 
 @riverpod
@@ -42,100 +42,123 @@ class ThemeData extends _$ThemeData {
 
   FluentThemeData lightTheme() {
     return FluentThemeData(
-      // scaffoldBackgroundColor: Colors.purple.lightest,
-      acrylicBackgroundColor: Colors.purple.lightest,
-      menuColor: Colors.purple.lighter.withOpacity(.7),
-      brightness: Brightness.light,
-      accentColor: Colors.purple,
-      typography: Typography.fromBrightness(
-        brightness: Brightness.light,
-        color: Colors.purple.darkest.toAccentColor(darkestFactor: .9),
+      scrollbarTheme: const ScrollbarThemeData(scrollbarColor: lightAccent),
+
+      dividerTheme: DividerThemeData(
+        thickness: 1,
+        decoration: BoxDecoration(
+          color: lightAccent.withOpacity(.2),
+        ),
       ),
+
+      cardColor: lightcard,
+
+      scaffoldBackgroundColor: lightBackground,
+
+      acrylicBackgroundColor: lightPrimary,
+
+      menuColor: lightPrimary,
+
+      brightness: Brightness.light,
+
+      accentColor: lightAccent.toAccentColor(),
+      // // fontFamily: 'Cairo',
+      // typography: Typography.fromBrightness(
+      //   brightness: Brightness.light,
+      // color: Colors.purple.darkest.toAccentColor(darkestFactor: .9),
+      // ),
+
       dialogTheme: ContentDialogThemeData(
-        barrierColor: Colors.purple.lighter,
         actionsDecoration: BoxDecoration(
-          color: Colors.purple.lighter,
+          color: lightPrimary,
           borderRadius: BorderRadius.circular(8.0),
         ),
         decoration: BoxDecoration(
-          color: Colors.purple.lightest,
+          color: lightBackground,
           borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+
       navigationPaneTheme: NavigationPaneThemeData(
+        selectedIconColor: ButtonState.all(lightAccent),
         unselectedTextStyle: ButtonState.all(
           const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.w400,
-            fontSize: 16.0,
+            fontSize: 17.0,
           ),
         ),
         selectedTextStyle: ButtonState.all(
           const TextStyle(
-            color: Colors.black,
+            color: lightAccent,
             fontWeight: FontWeight.w600,
-            fontSize: 18.0,
+            fontSize: 20.0,
           ),
         ),
-        highlightColor: Colors.purple.lightest,
-        backgroundColor: Colors.purple.lighter,
+        highlightColor: lightAccent,
+        backgroundColor: lightBackground,
       ),
     );
   }
 
   FluentThemeData darkTheme() {
     return FluentThemeData(
-      // scaffoldBackgroundColor: Colors.purple.darkest,
-      acrylicBackgroundColor: Colors.purple.darkest,
-      menuColor: Colors.purple.darker.withOpacity(.5),
-      brightness: Brightness.dark,
-      accentColor: Colors.yellow,
-      typography: Typography.fromBrightness(
-        brightness: Brightness.light,
-        color: Colors.white.toAccentColor(),
+      scrollbarTheme: const ScrollbarThemeData(scrollbarColor: darckAccent),
+
+      dividerTheme: DividerThemeData(
+        thickness: 1,
+        decoration: BoxDecoration(
+          color: darckAccent.withOpacity(.2),
+        ),
       ),
+
+      cardColor: darckCard,
+
+      scaffoldBackgroundColor: darkBackground,
+
+      acrylicBackgroundColor: darkPrimary,
+
+      menuColor: darkPrimary,
+
+      brightness: Brightness.dark,
+
+      accentColor: darckAccent.toAccentColor(),
+
+      // typography: Typography.fromBrightness(
+      //   brightness: Brightness.light,
+      //   color: Colors.white.toAccentColor(),
+      // ),
+
       dialogTheme: ContentDialogThemeData(
         actionsDecoration: BoxDecoration(
-          color: Colors.purple.darkest,
+          color: darkBackground,
           borderRadius: BorderRadius.circular(8.0),
         ),
         decoration: BoxDecoration(
-          color: Colors.purple.darker,
+          color: darkPrimary,
           borderRadius: BorderRadius.circular(8.0),
         ),
       ),
+
       navigationPaneTheme: NavigationPaneThemeData(
+        selectedIconColor: ButtonState.all(darckAccent),
         unselectedTextStyle: ButtonState.all(
           const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w400,
-            fontSize: 16.0,
+            fontSize: 17.0,
           ),
         ),
         selectedTextStyle: ButtonState.all(
           const TextStyle(
-            color: Colors.white,
+            color: darckAccent,
             fontWeight: FontWeight.w600,
-            fontSize: 18.0,
+            fontSize: 20.0,
           ),
         ),
-        backgroundColor: Colors.purple.darkest,
-        highlightColor: Colors.purple.lighter,
+        highlightColor: darckAccent,
+        backgroundColor: darkBackground,
       ),
-    );
-  }
-
-  AccentColor systemAccentColor() {
-    return AccentColor.swatch(
-      {
-        'darkest': SystemTheme.accentColor.darkest,
-        'darker': SystemTheme.accentColor.darker,
-        'dark': SystemTheme.accentColor.dark,
-        'normal': SystemTheme.accentColor.accent,
-        'light': SystemTheme.accentColor.light,
-        'lighter': SystemTheme.accentColor.lighter,
-        'lightest': SystemTheme.accentColor.lightest,
-      },
     );
   }
 
@@ -149,7 +172,7 @@ class ThemeData extends _$ThemeData {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 int getRandomInt(GetRandomIntRef ref) {
   final random = Random();
   final index = random.nextInt(darkModeColors.length);
@@ -176,5 +199,15 @@ final List<material.Color?> darkModeColors = [
   material.Colors.teal[600],
   material.Colors.cyan[600],
   material.Colors.indigo[600],
-  material.Colors.lime[600],
+  material.Colors.red[600],
 ];
+
+const darkPrimary = Color(0xFF2d2a4b);
+const darkBackground = Color(0xFF000032);
+const darckAccent = Color(0xFF70D9BC);
+const darckCard = Color(0xFF2d2a4b);
+
+const lightPrimary = Color(0xFFffffff);
+const lightBackground = Color(0xFFf3f3f3);
+const lightAccent = Color(0xFFf76794);
+const lightcard = Color(0xFFffffff);

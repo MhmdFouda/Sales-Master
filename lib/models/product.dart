@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'package:firedart/firedart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'product.freezed.dart';
 part 'product.g.dart';
@@ -14,7 +15,7 @@ class Product with _$Product {
     required double publicPrice,
     required String unitType,
     required int count,
-    required int minCount,
+    int? minCount,
     required int intialCount,
     required int colorIndex,
   }) = _Product;
@@ -22,17 +23,18 @@ class Product with _$Product {
   factory Product.fromJson(Map<String, dynamic> json) =>
       _$ProductFromJson(json);
 
-  factory Product.fromSnapshot(Document doc) {
+  factory Product.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return Product(
       id: doc.id,
-      name: doc['name'],
-      price: doc['price'].toDouble(),
-      publicPrice: doc['publicPrice'].toDouble(),
-      unitType: doc['unitType'],
-      count: doc['count'].toInt(),
-      minCount: doc['minCount'].toInt(),
-      intialCount: doc['intialCount'].toInt(),
-      colorIndex: doc['colorIndex'].toInt(),
+      name: data['name'] as String,
+      price: (data['price'] as num).toDouble(),
+      publicPrice: (data['publicPrice'] as num).toDouble(),
+      unitType: data['unitType'] as String,
+      count: (data['count'] as num).toInt(),
+      minCount: (data['minCount'] as num).toInt(),
+      intialCount: (data['intialCount'] as num).toInt(),
+      colorIndex: (data['colorIndex'] as num).toInt(),
     );
   }
 }

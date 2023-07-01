@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 extension ColorExtension on Color {
   Color generateShade(BuildContext context, double amount) {
@@ -37,5 +38,22 @@ extension ExpandWidgetVertically on Widget {
     return Expanded(
       child: this,
     );
+  }
+}
+
+extension NullableCurrencyFormatting on double? {
+  String formatAsCurrency({
+    String symbol = '\$', // Customize the currency symbol as needed
+    int decimalDigits = 2, // Specify the number of decimal digits to display
+  }) {
+    if (this == null) {
+      return '';
+    }
+    final currencyFormatter = intl.NumberFormat.currency(
+      locale: 'en_US',
+      symbol: symbol,
+      decimalDigits: decimalDigits,
+    );
+    return currencyFormatter.format(this!);
   }
 }

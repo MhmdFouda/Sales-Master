@@ -2,17 +2,16 @@ import 'package:fouda_pharma/models/product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'products.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class OrderProductList extends _$OrderProductList {
   @override
   List<Product> build() {
-    ref.keepAlive();
     return [];
   }
 
-  void close() {
-    ref.keepAlive().close();
-  }
+  // void close() {
+  //   ref.keepAlive().close();
+  // }
 
   double totalPrice() {
     double total = 0;

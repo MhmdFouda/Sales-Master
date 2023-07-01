@@ -6,7 +6,21 @@ part of 'auth.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$signInHash() => r'136f9b0c152d21141f6188df794587eabdb93ab3';
+String _$authHash() => r'352e1b1338f57dc2753fdc9a19d4695c25cc71ee';
+
+/// See also [auth].
+@ProviderFor(auth)
+final authProvider = AutoDisposeProvider<FirebaseAuth>.internal(
+  auth,
+  name: r'authProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$authHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AuthRef = AutoDisposeProviderRef<FirebaseAuth>;
+String _$signInHash() => r'de306d7e22e55b0d7e3599ef58503dff3010b799';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -118,7 +132,7 @@ class SignInProvider extends AutoDisposeFutureProvider<void> {
   }
 }
 
-String _$signoutHash() => r'8cb3702a53f47c9a1552b925f3f6070b2793efec';
+String _$signoutHash() => r'93c91db9679b19526a6b147557c36159aaa451dd';
 
 /// See also [signout].
 @ProviderFor(signout)
@@ -132,7 +146,7 @@ final signoutProvider = AutoDisposeProvider<void>.internal(
 );
 
 typedef SignoutRef = AutoDisposeProviderRef<void>;
-String _$getUserEmailHash() => r'f0c48aec4723db2c263d821dac0afeeb51c25144';
+String _$getUserEmailHash() => r'e094a2590a28dd11c23c74e995a8f7348f7caf87';
 
 /// See also [getUserEmail].
 @ProviderFor(getUserEmail)
@@ -146,4 +160,18 @@ final getUserEmailProvider = AutoDisposeFutureProvider<String?>.internal(
 );
 
 typedef GetUserEmailRef = AutoDisposeFutureProviderRef<String?>;
+String _$getUserIdHash() => r'8dc1e3912f6109bd27732edc5faa06cd68d16f04';
+
+/// See also [getUserId].
+@ProviderFor(getUserId)
+final getUserIdProvider = AutoDisposeFutureProvider<String?>.internal(
+  getUserId,
+  name: r'getUserIdProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$getUserIdHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef GetUserIdRef = AutoDisposeFutureProviderRef<String?>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

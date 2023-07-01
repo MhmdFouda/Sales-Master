@@ -26,7 +26,7 @@ mixin _$Product {
   double get publicPrice => throw _privateConstructorUsedError;
   String get unitType => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
-  int get minCount => throw _privateConstructorUsedError;
+  int? get minCount => throw _privateConstructorUsedError;
   int get intialCount => throw _privateConstructorUsedError;
   int get colorIndex => throw _privateConstructorUsedError;
 
@@ -47,7 +47,7 @@ abstract class $ProductCopyWith<$Res> {
       double publicPrice,
       String unitType,
       int count,
-      int minCount,
+      int? minCount,
       int intialCount,
       int colorIndex});
 }
@@ -71,7 +71,7 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
     Object? publicPrice = null,
     Object? unitType = null,
     Object? count = null,
-    Object? minCount = null,
+    Object? minCount = freezed,
     Object? intialCount = null,
     Object? colorIndex = null,
   }) {
@@ -100,10 +100,10 @@ class _$ProductCopyWithImpl<$Res, $Val extends Product>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
-      minCount: null == minCount
+      minCount: freezed == minCount
           ? _value.minCount
           : minCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       intialCount: null == intialCount
           ? _value.intialCount
           : intialCount // ignore: cast_nullable_to_non_nullable
@@ -130,7 +130,7 @@ abstract class _$$_ProductCopyWith<$Res> implements $ProductCopyWith<$Res> {
       double publicPrice,
       String unitType,
       int count,
-      int minCount,
+      int? minCount,
       int intialCount,
       int colorIndex});
 }
@@ -151,7 +151,7 @@ class __$$_ProductCopyWithImpl<$Res>
     Object? publicPrice = null,
     Object? unitType = null,
     Object? count = null,
-    Object? minCount = null,
+    Object? minCount = freezed,
     Object? intialCount = null,
     Object? colorIndex = null,
   }) {
@@ -180,10 +180,10 @@ class __$$_ProductCopyWithImpl<$Res>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
-      minCount: null == minCount
+      minCount: freezed == minCount
           ? _value.minCount
           : minCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       intialCount: null == intialCount
           ? _value.intialCount
           : intialCount // ignore: cast_nullable_to_non_nullable
@@ -206,7 +206,7 @@ class _$_Product implements _Product {
       required this.publicPrice,
       required this.unitType,
       required this.count,
-      required this.minCount,
+      this.minCount,
       required this.intialCount,
       required this.colorIndex});
 
@@ -226,7 +226,7 @@ class _$_Product implements _Product {
   @override
   final int count;
   @override
-  final int minCount;
+  final int? minCount;
   @override
   final int intialCount;
   @override
@@ -285,7 +285,7 @@ abstract class _Product implements Product {
       required final double publicPrice,
       required final String unitType,
       required final int count,
-      required final int minCount,
+      final int? minCount,
       required final int intialCount,
       required final int colorIndex}) = _$_Product;
 
@@ -304,7 +304,7 @@ abstract class _Product implements Product {
   @override
   int get count;
   @override
-  int get minCount;
+  int? get minCount;
   @override
   int get intialCount;
   @override

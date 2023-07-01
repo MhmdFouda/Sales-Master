@@ -6,12 +6,12 @@ part of 'products.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$orderProductListHash() => r'766489f369c74b5aa0a73c71c9bd61d570a84a7d';
+String _$orderProductListHash() => r'4f119264bcb986d37494bb80c2ab7f53e0d68da7';
 
 /// See also [OrderProductList].
 @ProviderFor(OrderProductList)
 final orderProductListProvider =
-    AutoDisposeNotifierProvider<OrderProductList, List<Product>>.internal(
+    NotifierProvider<OrderProductList, List<Product>>.internal(
   OrderProductList.new,
   name: r'orderProductListProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,5 +21,5 @@ final orderProductListProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$OrderProductList = AutoDisposeNotifier<List<Product>>;
+typedef _$OrderProductList = Notifier<List<Product>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

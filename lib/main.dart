@@ -1,27 +1,35 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:firedart/firedart.dart';
+// import 'package:firedart/firedart.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/config.dart';
+
 import 'package:fouda_pharma/providers/localization.dart';
 import 'package:fouda_pharma/providers/theme_provider.dart';
-import 'package:fouda_pharma/resources/preferences_store.dart';
+import 'package:fouda_pharma/resources/firebase_options.dart';
+// import 'package:fouda_pharma/resources/preferences_store.dart';
 import 'package:fouda_pharma/widget/auth_state.dart';
 import 'package:window_manager/window_manager.dart';
 
-// const appId = '1:228655808143:web:7d93af7de25a4f9a70bafa';
-const apiKey = 'AIzaSyCAFkGjCDiIAJxZVTcNGToCrUGVJgV94Aw';
-const projectId = 'fouda-pharma';
-// messagingSenderId: '228655808143',
-// authDomain: 'fouda-pharma.firebaseapp.com',
+const apiKey = Config.apiKey;
+const projectId = Config.projectId;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  FirebaseAuth.initialize(
-    apiKey,
-    await PreferencesStore.create(),
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
+  // FirebaseAuth.initialize(
+  //   apiKey,
+  //   await PreferencesStore.create(),
+  // );
   if (Platform.isWindows) {
     await WindowManager.instance.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
@@ -35,7 +43,7 @@ void main() async {
       await windowManager.setSkipTaskbar(false);
     });
   }
-  Firestore.initialize(projectId);
+  // Firestore.initialize(projectId);
 
   runApp(
     const ProviderScope(
@@ -49,9 +57,15 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = ref.watch(themeDataProvider.notifier);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+        overlays: [SystemUiOverlay.top]);
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent,
+      ),
+    );
     return FluentApp(
-      color: theme.systemAccentColor(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: ref.watch(localizationProvider),

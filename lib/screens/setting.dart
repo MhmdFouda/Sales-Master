@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fouda_pharma/providers/auth.dart';
 import 'package:fouda_pharma/providers/localization.dart';
+import 'package:fouda_pharma/screens/custom_container.dart';
 import 'package:fouda_pharma/widget/chnage_local.dart';
-import 'package:fouda_pharma/widget/darkmod_toggle.dart';
+import 'package:fouda_pharma/widget/Reusable/darkmod_toggle.dart';
+import 'package:nil/nil.dart';
 
 class SettingPage extends ConsumerWidget {
   const SettingPage({super.key});
@@ -12,54 +15,59 @@ class SettingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localizationProvider);
+    // final userId = ref.watch(getUserIdProvider.future);
     return ScaffoldPage(
-      content: Column(children: [
-        Padding(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ListTile(
-                shape: RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: FluentTheme.of(context).borderInputColor,
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Language"),
-                    LocaleSegmentButton(locale: locale),
-                  ],
-                ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 20),
+      content: Column(
+        children: [
+          // Button(
+          //   child: Text('transfear'),
+          //   onPressed: () async {
+          //     // final id = await userId;
+          //     // moveCollectionsToUser(id!);
+          //   },
+          // ),
+          ReusableContainer(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Language"),
+                  LocaleSegmentButton(locale: locale),
+                ],
               ),
-              const SizedBox(height: 20),
-              Platform.isAndroid
-                  ? ListTile(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: FluentTheme.of(context).borderInputColor,
-                          width: 1.5,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      title: const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Dark Mode"),
-                          DarkModToggle(),
-                        ],
-                      ),
-                    )
-                  : const SizedBox(
-                      height: 1,
-                    ),
-            ],
+            ),
           ),
-        ),
-      ]),
+          const SizedBox(height: 20),
+          Platform.isAndroid
+              ? const ReusableContainer(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Theme Mode"),
+                        DarkModToggle(),
+                      ],
+                    ),
+                  ),
+                )
+              : nil,
+          Platform.isAndroid
+              ? ReusableContainer(
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Button(
+                        child: const Text('Sign Out'),
+                        onPressed: () {
+                          ref.read(signoutProvider);
+                        },
+                      )),
+                )
+              : nil
+        ],
+      ),
     );
   }
 }

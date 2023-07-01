@@ -1,5 +1,4 @@
-import 'package:firedart/firedart.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'client.freezed.dart';
 part 'client.g.dart';
@@ -11,18 +10,20 @@ class Client with _$Client {
     required String name,
     String? phoneNumber,
     String? secPhoneNumber,
-    required int colorIndex,
+    double? balance,
+    double? credit,
   }) = _Client;
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
 
-  factory Client.fromSnapshot(Document doc) {
+  factory Client.fromSnapshot(DocumentSnapshot doc) {
     return Client(
       id: doc.id,
       name: doc['name'],
       phoneNumber: doc['phoneNumber'],
       secPhoneNumber: doc['secPhoneNumber'],
-      colorIndex: doc['colorIndex'],
+      balance: doc['balance'].toDouble(),
+      credit: doc['credit'].toDouble(),
     );
   }
 }

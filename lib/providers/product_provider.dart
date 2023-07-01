@@ -1,17 +1,18 @@
 import 'dart:async';
-import 'package:firedart/firedart.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:fouda_pharma/models/product.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'product_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class AsyncProducts extends _$AsyncProducts {
   Future<List<Product>> _fetchProduct() async {
-    final productCollection = Firestore.instance.collection('products');
-    final documents = await productCollection.get();
+    final productCollection = FirebaseFirestore.instance.collection('products');
+    final documents = await productCollection.get(const GetOptions());
     List<Product> productList = [];
-    for (final doc in documents) {
+    for (final doc in documents.docs) {
       productList.add(Product.fromSnapshot(doc));
     }
     return productList;
@@ -22,48 +23,42 @@ class AsyncProducts extends _$AsyncProducts {
     return _fetchProduct();
   }
 
+  // git products list length
+  Future<int> productCount() async {
+    final products = await _fetchProduct();
+    final int count = products.length;
+    return count;
+  }
+
   Future<Product> getProduct(String id) async {
-    final productCollection = Firestore.instance.collection('products');
-    final product = await productCollection.document(id).get();
+    final productCollection = FirebaseFirestore.instance.collection('products');
+    final product = await productCollection.doc(id).get(const GetOptions());
     return Product.fromSnapshot(product);
   }
 
   Future<void> addProduct(Product product) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(
-      () async {
-        final productCollection = Firestore.instance.collection('products');
-        await productCollection.add(product.toJson());
-        return _fetchProduct();
-      },
-    );
+    final productCollection = FirebaseFirestore.instance.collection('products');
+    await productCollection.add(product.toJson());
   }
 
   // update product
   Future<void> updateProduct(Product product) async {
-    state = await AsyncValue.guard(
-      () async {
-        final productCollection = Firestore.instance.collection('products');
-        await productCollection.document(product.id!).update(product.toJson());
-        return _fetchProduct();
-      },
-    );
-  }
-
-  Future<int> getProductCount(String id) async {
-    final productCollection = Firestore.instance.collection('products');
-    final product = await productCollection.document(id).get();
-    return Product.fromSnapshot(product).count;
+    final productCollection = FirebaseFirestore.instance.collection('products');
+    await productCollection.doc(product.id!).update(product.toJson());
   }
 
   // delete product
 
   Future<void> deleteProduct(String id) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final productCollection = Firestore.instance.collection('products');
-      await productCollection.document(id).delete();
-      return _fetchProduct();
-    });
+    final productCollection = FirebaseFirestore.instance.collection('products');
+    await productCollection.doc(id).delete();
   }
+}
+
+@riverpod
+FutureOr<Product> getAsyncProduct(GetAsyncProductRef ref,
+    {required String id}) async {
+  final product =
+      await ref.watch(asyncProductsProvider.notifier).getProduct(id);
+  return product;
 }

@@ -34,11 +34,6 @@ void productContentDialog({
         ? (product?.count == 0.0 ? '' : product?.count.toString())
         : null,
   );
-  final productMinCountController = TextEditingController(
-    text: update
-        ? (product?.minCount == 0.0 ? '' : product?.minCount.toString())
-        : null,
-  );
 
   await showDialog(
     context: context,
@@ -95,13 +90,6 @@ void productContentDialog({
           const SizedBox(
             height: 10,
           ),
-          ListTile(
-            leading: Text(context.loc.min),
-            title: TextBox(
-              keyboardType: TextInputType.number,
-              controller: productMinCountController,
-            ),
-          ),
         ],
       ),
       actions: [
@@ -109,30 +97,32 @@ void productContentDialog({
           child: Text(buttonTitle),
           onPressed: () {
             final index = ref.read(getRandomIntProvider);
-            onPressed(Product(
-              colorIndex: index,
-              name: productNameController.text.isNotEmpty
-                  ? productNameController.text
-                  : '',
-              price: productPriceController.text.isNotEmpty
-                  ? double.parse(productPriceController.text)
-                  : 0.0,
-              count: productCountController.text.isNotEmpty
-                  ? int.parse(productCountController.text)
-                  : 0,
-              intialCount: productCountController.text.isNotEmpty
-                  ? int.parse(productCountController.text)
-                  : 0,
-              minCount: productMinCountController.text.isNotEmpty
-                  ? int.parse(productMinCountController.text)
-                  : 0,
-              publicPrice: productpublicPriceController.text.isNotEmpty
-                  ? double.parse(productpublicPriceController.text)
-                  : 0.0,
-              unitType: productUnitTypeController.text.isNotEmpty
-                  ? productUnitTypeController.text
-                  : '',
-            ));
+            onPressed(
+              Product(
+                colorIndex: index,
+                name: productNameController.text.isNotEmpty
+                    ? productNameController.text
+                    : '',
+                price: productPriceController.text.isNotEmpty
+                    ? double.parse(productPriceController.text)
+                    : 0.0,
+                count: productCountController.text.isNotEmpty
+                    ? int.parse(productCountController.text)
+                    : 0,
+                intialCount: productCountController.text.isNotEmpty
+                    ? int.parse(productCountController.text)
+                    : 0,
+                publicPrice: productpublicPriceController.text.isNotEmpty
+                    ? double.parse(productpublicPriceController.text)
+                    : 0.0,
+                unitType: productUnitTypeController.text.isNotEmpty
+                    ? productUnitTypeController.text
+                    : '',
+                minCount: productCountController.text.isNotEmpty
+                    ? (int.parse(productCountController.text) / 4).round()
+                    : 0,
+              ),
+            );
             Navigator.pop(context);
           },
         ),
@@ -147,6 +137,6 @@ void productContentDialog({
   productNameController.dispose();
   productPriceController.dispose();
   productCountController.dispose();
-  productMinCountController.dispose();
+
   productpublicPriceController.dispose();
 }

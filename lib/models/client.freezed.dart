@@ -24,7 +24,8 @@ mixin _$Client {
   String get name => throw _privateConstructorUsedError;
   String? get phoneNumber => throw _privateConstructorUsedError;
   String? get secPhoneNumber => throw _privateConstructorUsedError;
-  int get colorIndex => throw _privateConstructorUsedError;
+  double? get balance => throw _privateConstructorUsedError;
+  double? get credit => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +42,8 @@ abstract class $ClientCopyWith<$Res> {
       String name,
       String? phoneNumber,
       String? secPhoneNumber,
-      int colorIndex});
+      double? balance,
+      double? credit});
 }
 
 /// @nodoc
@@ -61,7 +63,8 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
     Object? name = null,
     Object? phoneNumber = freezed,
     Object? secPhoneNumber = freezed,
-    Object? colorIndex = null,
+    Object? balance = freezed,
+    Object? credit = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -80,10 +83,14 @@ class _$ClientCopyWithImpl<$Res, $Val extends Client>
           ? _value.secPhoneNumber
           : secPhoneNumber // ignore: cast_nullable_to_non_nullable
               as String?,
-      colorIndex: null == colorIndex
-          ? _value.colorIndex
-          : colorIndex // ignore: cast_nullable_to_non_nullable
-              as int,
+      balance: freezed == balance
+          ? _value.balance
+          : balance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      credit: freezed == credit
+          ? _value.credit
+          : credit // ignore: cast_nullable_to_non_nullable
+              as double?,
     ) as $Val);
   }
 }
@@ -99,7 +106,8 @@ abstract class _$$_ClientCopyWith<$Res> implements $ClientCopyWith<$Res> {
       String name,
       String? phoneNumber,
       String? secPhoneNumber,
-      int colorIndex});
+      double? balance,
+      double? credit});
 }
 
 /// @nodoc
@@ -116,7 +124,8 @@ class __$$_ClientCopyWithImpl<$Res>
     Object? name = null,
     Object? phoneNumber = freezed,
     Object? secPhoneNumber = freezed,
-    Object? colorIndex = null,
+    Object? balance = freezed,
+    Object? credit = freezed,
   }) {
     return _then(_$_Client(
       id: freezed == id
@@ -135,10 +144,14 @@ class __$$_ClientCopyWithImpl<$Res>
           ? _value.secPhoneNumber
           : secPhoneNumber // ignore: cast_nullable_to_non_nullable
               as String?,
-      colorIndex: null == colorIndex
-          ? _value.colorIndex
-          : colorIndex // ignore: cast_nullable_to_non_nullable
-              as int,
+      balance: freezed == balance
+          ? _value.balance
+          : balance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      credit: freezed == credit
+          ? _value.credit
+          : credit // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -151,7 +164,8 @@ class _$_Client implements _Client {
       required this.name,
       this.phoneNumber,
       this.secPhoneNumber,
-      required this.colorIndex});
+      this.balance,
+      this.credit});
 
   factory _$_Client.fromJson(Map<String, dynamic> json) =>
       _$$_ClientFromJson(json);
@@ -165,11 +179,13 @@ class _$_Client implements _Client {
   @override
   final String? secPhoneNumber;
   @override
-  final int colorIndex;
+  final double? balance;
+  @override
+  final double? credit;
 
   @override
   String toString() {
-    return 'Client(id: $id, name: $name, phoneNumber: $phoneNumber, secPhoneNumber: $secPhoneNumber, colorIndex: $colorIndex)';
+    return 'Client(id: $id, name: $name, phoneNumber: $phoneNumber, secPhoneNumber: $secPhoneNumber, balance: $balance, credit: $credit)';
   }
 
   @override
@@ -183,14 +199,14 @@ class _$_Client implements _Client {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.secPhoneNumber, secPhoneNumber) ||
                 other.secPhoneNumber == secPhoneNumber) &&
-            (identical(other.colorIndex, colorIndex) ||
-                other.colorIndex == colorIndex));
+            (identical(other.balance, balance) || other.balance == balance) &&
+            (identical(other.credit, credit) || other.credit == credit));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, name, phoneNumber, secPhoneNumber, colorIndex);
+      runtimeType, id, name, phoneNumber, secPhoneNumber, balance, credit);
 
   @JsonKey(ignore: true)
   @override
@@ -212,7 +228,8 @@ abstract class _Client implements Client {
       required final String name,
       final String? phoneNumber,
       final String? secPhoneNumber,
-      required final int colorIndex}) = _$_Client;
+      final double? balance,
+      final double? credit}) = _$_Client;
 
   factory _Client.fromJson(Map<String, dynamic> json) = _$_Client.fromJson;
 
@@ -225,7 +242,9 @@ abstract class _Client implements Client {
   @override
   String? get secPhoneNumber;
   @override
-  int get colorIndex;
+  double? get balance;
+  @override
+  double? get credit;
   @override
   @JsonKey(ignore: true)
   _$$_ClientCopyWith<_$_Client> get copyWith =>
