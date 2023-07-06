@@ -48,4 +48,4 @@ app.*.map.json
 /ios/Runner/GoogleService-Info.plist
 
 # supabase
-/config.dart
+/lib//config.dart
