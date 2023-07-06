@@ -110,12 +110,12 @@ class GetAsyncSupplierProvider extends AutoDisposeFutureProvider<Supplier> {
   }
 }
 
-String _$asyncSupplierHash() => r'ebc890a015254a87e7e3303c1f8ac142a89f6b13';
+String _$asyncSupplierHash() => r'32feee6768304258c34b06a8399c0e7ac1f474b1';
 
 /// See also [AsyncSupplier].
 @ProviderFor(AsyncSupplier)
 final asyncSupplierProvider =
-    AsyncNotifierProvider<AsyncSupplier, List<Supplier>>.internal(
+    AutoDisposeAsyncNotifierProvider<AsyncSupplier, List<Supplier>>.internal(
   AsyncSupplier.new,
   name: r'asyncSupplierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -125,5 +125,5 @@ final asyncSupplierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$AsyncSupplier = AsyncNotifier<List<Supplier>>;
+typedef _$AsyncSupplier = AutoDisposeAsyncNotifier<List<Supplier>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

@@ -16,6 +16,21 @@ import 'package:fouda_pharma/resources/firebase_options.dart';
 import 'package:fouda_pharma/widget/auth_state.dart';
 import 'package:window_manager/window_manager.dart';
 
+var indexes = [
+  Index(
+    collectionGroup: 'orders',
+    fields: [IndexField(fieldPath: 'confirmTime', order: Order.descending)],
+    queryScope: QueryScope.collection,
+  ),
+  Index(
+    collectionGroup: 'orders',
+    fields: [
+      IndexField(fieldPath: 'clientName', arrayConfig: ArrayConfig.contains),
+      IndexField(fieldPath: 'confirmTime', order: Order.descending)
+    ],
+    queryScope: QueryScope.collection,
+  ),
+];
 const apiKey = Config.apiKey;
 const projectId = Config.projectId;
 
@@ -26,6 +41,8 @@ void main() async {
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
+
+  await FirebaseFirestore.instance.setIndexConfiguration(indexes: indexes);
   // FirebaseAuth.initialize(
   //   apiKey,
   //   await PreferencesStore.create(),

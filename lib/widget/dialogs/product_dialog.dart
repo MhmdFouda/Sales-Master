@@ -137,6 +137,5 @@ void productContentDialog({
   productNameController.dispose();
   productPriceController.dispose();
   productCountController.dispose();
-
   productpublicPriceController.dispose();
 }

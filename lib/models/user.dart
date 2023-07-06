@@ -19,10 +19,11 @@ class UserApp with _$UserApp {
 
 // fromsnapshot
   factory UserApp.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return UserApp(
-      id: doc['id'],
-      name: doc['name'],
-      email: doc['email'],
+      id: data['id'],
+      name: data['name'],
+      email: data['email'],
     );
   }
 }

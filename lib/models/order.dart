@@ -51,19 +51,20 @@ class Order {
   }
 
   factory Order.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     final List<Product> products = List<Product>.from(
-        (doc['products']).map((product) => Product.fromJson(product)));
+        (data['products'] as List).map((product) => Product.fromJson(product)));
 
-    final int confirmTimeMillis = doc['confirmTime'] as int;
+    final int confirmTimeMillis = data['confirmTime'] as int;
     final DateTime confirmTime =
         DateTime.fromMillisecondsSinceEpoch(confirmTimeMillis);
 
     return Order(
       id: doc.id,
       products: products,
-      clientName: doc['clientName'],
-      totalPrice: doc['totalPrice'].toDouble(),
-      publicTotalPrice: doc['publicTotalPrice'].toDouble(),
+      clientName: data['clientName'] as String,
+      totalPrice: (data['totalPrice'] as num).toDouble(),
+      publicTotalPrice: (data['publicTotalPrice'] as num).toDouble(),
       confirmTime: confirmTime,
     );
   }

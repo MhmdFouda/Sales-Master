@@ -15,12 +15,13 @@ class Invoice with _$Invoice {
       _$InvoiceFromJson(json);
 
   factory Invoice.fromSnapshot(DocumentSnapshot doc) {
-    final dateTime = DateTime.parse(doc['date'] as String);
+    final data = doc.data() as Map<String, dynamic>;
+    final dateTime = DateTime.parse(data['date']);
 
     return Invoice(
       id: doc.id,
       date: dateTime,
-      balance: doc['balance'].toDouble(),
+      balance: data['balance'].toDouble(),
     );
   }
 }

@@ -27,14 +27,14 @@ class Product with _$Product {
     final data = doc.data() as Map<String, dynamic>;
     return Product(
       id: doc.id,
-      name: data['name'] as String,
-      price: (data['price'] as num).toDouble(),
-      publicPrice: (data['publicPrice'] as num).toDouble(),
-      unitType: data['unitType'] as String,
-      count: (data['count'] as num).toInt(),
-      minCount: (data['minCount'] as num).toInt(),
-      intialCount: (data['intialCount'] as num).toInt(),
-      colorIndex: (data['colorIndex'] as num).toInt(),
+      name: data['name'],
+      price: (data['price']).toDouble(),
+      publicPrice: (data['publicPrice']).toDouble(),
+      unitType: data['unitType'],
+      count: (data['count']).toInt(),
+      minCount: (data['minCount']).toInt(),
+      intialCount: (data['intialCount']).toInt(),
+      colorIndex: (data['colorIndex']).toInt(),
     );
   }
 }

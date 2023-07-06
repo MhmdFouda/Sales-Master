@@ -65,13 +65,14 @@ class AllProductList extends ConsumerWidget {
         ),
       ),
       content: products.when(
-        data: (data) {
+        data: (product) {
           return ReusableContainer(
             child: material.RefreshIndicator(
+              triggerMode: material.RefreshIndicatorTriggerMode.anywhere,
               onRefresh: () => ref.refresh(asyncProductsProvider.future),
               child: GridView.builder(
                 padding: EdgeInsets.all(Platform.isWindows ? 25.0 : 12.0),
-                itemCount: data.length,
+                itemCount: product.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: Platform.isAndroid ? 3 : 6,
                   crossAxisSpacing: 12,
@@ -79,13 +80,13 @@ class AllProductList extends ConsumerWidget {
                 ),
                 itemBuilder: (context, index) {
                   return CustomInfoleWidget(
-                    colorIndex: data[index].colorIndex,
-                    objectName: data[index].name,
-                    count: data[index].count,
+                    colorIndex: product[index].colorIndex,
+                    objectName: product[index].name,
+                    count: product[index].count,
                     onPressed: () {
                       Navigator.of(context).push(FluentPageRoute(
                         builder: (context) =>
-                            ProductInfoPage(productId: data[index].id!),
+                            ProductInfoPage(productId: product[index].id!),
                       ));
                     },
                   );

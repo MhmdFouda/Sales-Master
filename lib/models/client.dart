@@ -15,15 +15,15 @@ class Client with _$Client {
   }) = _Client;
 
   factory Client.fromJson(Map<String, dynamic> json) => _$ClientFromJson(json);
-
   factory Client.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return Client(
       id: doc.id,
-      name: doc['name'],
-      phoneNumber: doc['phoneNumber'],
-      secPhoneNumber: doc['secPhoneNumber'],
-      balance: doc['balance'].toDouble(),
-      credit: doc['credit'].toDouble(),
+      name: data['name'],
+      phoneNumber: data['phoneNumber'],
+      secPhoneNumber: data['secPhoneNumber'],
+      balance: (data['balance']).toDouble(),
+      credit: (data['credit']).toDouble(),
     );
   }
 }

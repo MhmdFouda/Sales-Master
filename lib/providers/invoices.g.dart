@@ -6,7 +6,7 @@ part of 'invoices.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$asyncInvoiceHash() => r'e7a657c6c53d8e0a21114e89bf8cdee31de4c446';
+String _$asyncInvoiceHash() => r'98c1f1e9d0fb16a3c8ab7c8bffedb0a9a355e7a3';
 
 /// Copied from Dart SDK
 class _SystemHash {

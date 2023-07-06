@@ -44,9 +44,7 @@ class SuppliersPage extends ConsumerWidget {
                         onPressed: (newSupplier) {
                           ref
                               .read(asyncSupplierProvider.notifier)
-                              .addSupplier(newSupplier)
-                              .then((value) =>
-                                  ref.refresh(asyncSupplierProvider));
+                              .addSupplier(newSupplier);
                           Navigator.of(context).pop();
                         },
                       );

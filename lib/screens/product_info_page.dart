@@ -18,7 +18,11 @@ class ProductInfoPage extends ConsumerWidget {
   final String productId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final product = ref.watch(getAsyncProductProvider(id: productId));
+    final asyncProduct = ref.watch(
+      getAsyncProductProvider(
+        id: productId,
+      ),
+    );
 
     final headerSize = Platform.isWindows ? 42.0 : 24.0;
     final subHeaderSize = Platform.isWindows ? 28.0 : 18.0;
@@ -39,8 +43,8 @@ class ProductInfoPage extends ConsumerWidget {
                 : [],
           ),
         ),
-        content: product.when(
-          data: (data) {
+        content: asyncProduct.when(
+          data: (product) {
             return ScaffoldPage(
               padding: const EdgeInsets.all(0.0),
               header: ReusableContainer(
@@ -48,7 +52,7 @@ class ProductInfoPage extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      data.name,
+                      product.name,
                       maxLines: 3,
                       style: TextStyle(
                         fontSize: headerSize,
@@ -62,7 +66,7 @@ class ProductInfoPage extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          '${context.loc.price} : ${data.price}',
+                          '${context.loc.price} : ${product.price}',
                           style: TextStyle(
                             fontSize: subHeaderSize,
                           ),
@@ -71,7 +75,7 @@ class ProductInfoPage extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
-                            '${context.loc.public} : ${data.publicPrice}',
+                            '${context.loc.public} : ${product.publicPrice}',
                             style: TextStyle(
                               fontSize: subHeaderSize,
                             ),
@@ -81,7 +85,7 @@ class ProductInfoPage extends ConsumerWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
                           child: Text(
-                            '${context.loc.count} : ${data.count}',
+                            '${context.loc.count} : ${product.count}',
                             style: TextStyle(
                               fontSize: subHeaderSize,
                             ),
@@ -98,7 +102,7 @@ class ProductInfoPage extends ConsumerWidget {
                       ? MainAxisAlignment.end
                       : MainAxisAlignment.center,
                   children: [
-                    ProductChart(product: data),
+                    ProductChart(product: product),
                   ],
                 ),
               ),
@@ -110,7 +114,7 @@ class ProductInfoPage extends ConsumerWidget {
                     children: [
                       Button(
                         onPressed: () => productContentDialog(
-                          product: data,
+                          product: product,
                           update: true,
                           context: context,
                           ref: ref,
@@ -120,10 +124,8 @@ class ProductInfoPage extends ConsumerWidget {
                             ref
                                 .read(asyncProductsProvider.notifier)
                                 .updateProduct(
-                                  updatedProduct.copyWith(id: data.id),
-                                )
-                                .then((value) => ref.refresh(
-                                    getAsyncProductProvider(id: data.id!)));
+                                  updatedProduct.copyWith(id: product.id),
+                                );
                           },
                         ),
                         child: Text(context.loc.edite),
@@ -135,7 +137,7 @@ class ProductInfoPage extends ConsumerWidget {
                         onPressed: () {
                           ref
                               .read(asyncProductsProvider.notifier)
-                              .deleteProduct(data.id!);
+                              .deleteProduct(product.id!);
                           Navigator.of(context).pop();
                         },
                         child: Text(context.loc.delete),

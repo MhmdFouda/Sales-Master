@@ -2,20 +2,21 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:fouda_pharma/models/product.dart';
+import 'package:nimbostratus/nimbostratus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'product_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class AsyncProducts extends _$AsyncProducts {
   Future<List<Product>> _fetchProduct() async {
     final productCollection = FirebaseFirestore.instance.collection('products');
-    final documents = await productCollection.get(const GetOptions());
-    List<Product> productList = [];
-    for (final doc in documents.docs) {
-      productList.add(Product.fromSnapshot(doc));
-    }
-    return productList;
+    final snap = await Nimbostratus.instance.getDocuments(
+      productCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+
+    return snap.map((doc) => Product.fromSnapshot(doc)).toList();
   }
 
   @override
@@ -23,42 +24,74 @@ class AsyncProducts extends _$AsyncProducts {
     return _fetchProduct();
   }
 
-  // git products list length
-  Future<int> productCount() async {
-    final products = await _fetchProduct();
-    final int count = products.length;
-    return count;
-  }
-
   Future<Product> getProduct(String id) async {
     final productCollection = FirebaseFirestore.instance.collection('products');
-    final product = await productCollection.doc(id).get(const GetOptions());
-    return Product.fromSnapshot(product);
+    final snap = await Nimbostratus.instance.getDocument(
+      productCollection.doc(id),
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return Product.fromSnapshot(snap);
   }
 
   Future<void> addProduct(Product product) async {
-    final productCollection = FirebaseFirestore.instance.collection('products');
-    await productCollection.add(product.toJson());
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final productCollection =
+          FirebaseFirestore.instance.collection('products');
+      await Nimbostratus.instance.addDocument(
+        productCollection,
+        product.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchProduct();
+    });
+
+    ref.invalidateSelf();
   }
 
-  // update product
   Future<void> updateProduct(Product product) async {
-    final productCollection = FirebaseFirestore.instance.collection('products');
-    await productCollection.doc(product.id!).update(product.toJson());
-  }
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final productCollection =
+          FirebaseFirestore.instance.collection('products');
+      await Nimbostratus.instance.updateDocument(
+        productCollection.doc(product.id!),
+        product.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchProduct();
+    });
 
-  // delete product
+    ref.invalidateSelf();
+    ref.invalidate(
+      getAsyncProductProvider(
+        id: product.id!,
+      ),
+    );
+  }
 
   Future<void> deleteProduct(String id) async {
-    final productCollection = FirebaseFirestore.instance.collection('products');
-    await productCollection.doc(id).delete();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final productCollection =
+          FirebaseFirestore.instance.collection('products');
+      await Nimbostratus.instance.deleteDocument(
+        productCollection.doc(id),
+        deletePolicy: DeletePolicy.cacheAndServer,
+      );
+      return _fetchProduct();
+    });
+
+    ref.invalidateSelf();
   }
 }
 
 @riverpod
-FutureOr<Product> getAsyncProduct(GetAsyncProductRef ref,
-    {required String id}) async {
-  final product =
-      await ref.watch(asyncProductsProvider.notifier).getProduct(id);
-  return product;
+class GetAsyncProduct extends _$GetAsyncProduct {
+  @override
+  FutureOr<Product> build({required String id}) async {
+    final product =
+        await ref.watch(asyncProductsProvider.notifier).getProduct(id);
+    return product;
+  }
 }

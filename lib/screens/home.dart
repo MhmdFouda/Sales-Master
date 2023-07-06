@@ -10,7 +10,6 @@ import 'package:fouda_pharma/providers/order_provider.dart';
 import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/providers/products.dart';
 import 'package:fouda_pharma/screens/custom_container.dart';
-import 'package:fouda_pharma/screens/order_info_page.dart';
 import 'package:fouda_pharma/widget/dialogs/client_dialog.dart';
 import 'package:fouda_pharma/widget/order_products.dart';
 import 'package:fouda_pharma/widget/search_bar.dart';
@@ -201,28 +200,19 @@ class HomePage extends ConsumerWidget {
                   }
                   // add order to database then refr
                   ref.read(asyncOrderProviderProvider.notifier).addOrder(order);
+
                   // update client balance and credit then refresh orderproductlist
-                  ref
-                      .read(asyncClientsProvider.notifier)
-                      .updateClient(
+                  ref.read(asyncClientsProvider.notifier).updateClient(
                         client!.copyWith(
                           balance: totalprice + client.balance!,
                           credit: totalprice + client.credit!,
                         ),
-                      )
-                      .then((value) => ref.refresh(asyncOrderProviderProvider));
+                      );
+
                   // reset orderproductlist state provider
                   ref.read(orderProductListProvider.notifier).reset();
-                  //
-                  Navigator.pushReplacement(
-                    context,
-                    FluentPageRoute(
-                      builder: (context) => OrderInfoPage(
-                        noId: true,
-                        order: order,
-                      ),
-                    ),
-                  );
+
+                  Navigator.of(context).pop();
                 },
                 child: Text(context.loc.confirm),
               ),

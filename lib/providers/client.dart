@@ -1,47 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nimbostratus/nimbostratus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:fouda_pharma/models/client.dart';
 
 part 'client.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class AsyncClients extends _$AsyncClients {
-  Future<List<Client>> _fetchClient() async {
+  Future<List<Client>> _fetchClients() async {
     final clientCollection = FirebaseFirestore.instance.collection('clients');
-    final querySnapshot = await clientCollection.get(const GetOptions());
-    final clientList =
-        querySnapshot.docs.map((doc) => Client.fromSnapshot(doc)).toList();
-    return clientList;
+    final snap = await Nimbostratus.instance.getDocuments(
+      clientCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return snap.map((doc) => Client.fromSnapshot(doc)).toList();
   }
 
   @override
   FutureOr<List<Client>> build() async {
-    return _fetchClient();
+    return _fetchClients();
   }
 
-  Client? getClient({required String id}) {
-    for (final client in state.value ?? []) {
-      if (client.id == id) {
-        return client;
-      }
-    }
-    return null; // Client with the specified ID not found
+  Future<Client> getClient(String id) async {
+    final clientCollection = FirebaseFirestore.instance.collection('clients');
+    final snap = await Nimbostratus.instance.getDocument(
+      clientCollection.doc(id),
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return Client.fromSnapshot(snap);
   }
 
   Future<void> addClient(Client client) async {
-    final clientCollection = FirebaseFirestore.instance.collection('clients');
-    final docRef = await clientCollection.add(client.toJson());
-    final id = docRef.id;
-    await docRef.update({'id': id});
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final clientCollection = FirebaseFirestore.instance.collection('clients');
+      await Nimbostratus.instance.addDocument(
+        clientCollection,
+        client.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchClients();
+    });
+
+    ref.invalidateSelf();
   }
 
   Future<void> updateClient(Client client) async {
     final clientCollection = FirebaseFirestore.instance.collection('clients');
-    await clientCollection.doc(client.id!).update(client.toJson());
+    await Nimbostratus.instance.updateDocument(
+      clientCollection.doc(client.id),
+      client.toJson(),
+      writePolicy: WritePolicy.cacheAndServer,
+    );
+
+    ref.invalidateSelf();
+    ref.invalidate(
+      getAsyncClientProvider(
+        client.id!,
+      ),
+    );
   }
 
   Future<void> deleteClient(String id) async {
-    final clientCollection = FirebaseFirestore.instance.collection('clients');
-    await clientCollection.doc(id).delete();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final clientCollection = FirebaseFirestore.instance.collection('clients');
+      await Nimbostratus.instance.deleteDocument(
+        clientCollection.doc(id),
+        deletePolicy: DeletePolicy.cacheAndServer,
+      );
+      return _fetchClients();
+    });
+
+    ref.invalidateSelf();
+  }
+}
+
+@riverpod
+class GetAsyncClient extends _$GetAsyncClient {
+  @override
+  FutureOr<Client> build(String id) async {
+    final client = await ref.watch(asyncClientsProvider.notifier).getClient(id);
+    return client;
   }
 }

@@ -5,14 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/date_time_formater.dart';
 import 'package:fouda_pharma/providers/order_provider.dart';
+import 'package:fouda_pharma/resources/extension.dart';
 import 'package:fouda_pharma/screens/custom_container.dart';
 import 'package:fouda_pharma/screens/order_info_page.dart';
 
-class HistoryPage extends StatelessWidget {
+class HistoryPage extends ConsumerWidget {
   const HistoryPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ScaffoldPage(
       resizeToAvoidBottomInset: false,
       header: ReusableContainer(
@@ -28,6 +29,18 @@ class HistoryPage extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 48,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ReusableContainer(
+                    color: FluentTheme.of(context).accentColor,
+                    hight: 40,
+                    child: FittedBox(
+                      child: Text(
+                        ref
+                            .watch(asyncOrderProviderProvider.notifier)
+                            .getTotalPrice()
+                            .formatAsCurrency(),
                       ),
                     ),
                   ),
@@ -72,33 +85,35 @@ class OrdersList extends ConsumerWidget {
     final orderList = isAll
         ? ref.watch(asyncOrderProviderProvider)
         : ref.watch(asyncFilterdOrderProvider(clientName!));
-    return orderList.when(data: (data) {
+    return orderList.when(data: (orders) {
       return material.RefreshIndicator(
         onRefresh: () => ref.refresh(asyncOrderProviderProvider.future),
         child: ListView.separated(
-          itemCount: data.length,
+          itemCount: orders.length,
           itemBuilder: (context, index) {
             return ListTile(
               onPressed: () {
                 Navigator.of(context).push(
                   FluentPageRoute(
-                    builder: (context) =>
-                        OrderInfoPage(noId: false, order: data[index]),
+                    builder: (context) => OrderInfoPage(
+                      noId: false,
+                      orderId: orders[index].id!,
+                    ),
                   ),
                 );
               },
               trailing: Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: Text("${data[index].totalPrice} EGP"),
+                child: Text("${orders[index].totalPrice} EGP"),
               ),
               title: Text(
-                data[index].clientName,
+                orders[index].clientName,
                 style: const TextStyle(fontSize: 16),
               ),
               subtitle: Text(
                 ref.watch(
                   dateFormaterProvider(
-                    data[index].confirmTime,
+                    orders[index].confirmTime,
                   ),
                 ),
                 style: const TextStyle(fontSize: 14),
@@ -117,3 +132,7 @@ class OrdersList extends ConsumerWidget {
     });
   }
 }
+
+final totalPayMentProvider = StateProvider<double>((ref) {
+  return 0.0;
+});

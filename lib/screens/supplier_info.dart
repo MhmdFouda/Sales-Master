@@ -233,17 +233,17 @@ class SupplierInfoPage extends ConsumerWidget {
           collectionName: 'suppliers',
           id: data[index].id!,
         )
-        .then((value) => ref.refresh(
-              asyncInvoiceProvider(
-                collectionName: 'suppliers',
-                collectionId: supplier.id!,
+        .then(
+          (_) => ref
+              .read(
+                asyncSupplierProvider.notifier,
+              )
+              .updateSupplier(
+                supplier.copyWith(
+                  balance: total - data[index].balance!,
+                ),
               ),
-            ));
-    ref
-        .read(asyncSupplierProvider.notifier)
-        .updateSupplier(
-            supplier.copyWith(balance: total - data[index].balance!))
-        .then((_) => ref.refresh(asyncSupplierProvider));
+        );
   }
 
   // add invoice
@@ -254,24 +254,24 @@ class SupplierInfoPage extends ConsumerWidget {
     double total,
   ) {
     ref
-        .read(asyncInvoiceProvider(
-          collectionName: 'suppliers',
-          collectionId: supplier.id!,
-        ).notifier)
+        .read(
+          asyncInvoiceProvider(
+            collectionName: 'suppliers',
+            collectionId: supplier.id!,
+          ).notifier,
+        )
         .addinvoice(
             invoice: invoice,
             collectionId: supplier.id!,
             collectionName: 'suppliers')
-        .then((_) => ref.refresh(
-              asyncInvoiceProvider(
-                collectionName: 'suppliers',
-                collectionId: supplier.id!,
+        .then(
+          (_) => ref.read(asyncSupplierProvider.notifier).updateSupplier(
+                supplier.copyWith(
+                  balance: total + invoice.balance!,
+                ),
               ),
-            ));
-    ref
-        .read(asyncSupplierProvider.notifier)
-        .updateSupplier(supplier.copyWith(balance: total + invoice.balance!))
-        .then((_) => ref.refresh(asyncSupplierProvider));
+        );
+
     Navigator.pop(context);
   }
 

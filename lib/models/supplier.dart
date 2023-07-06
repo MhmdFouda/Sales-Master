@@ -19,15 +19,16 @@ class Supplier with _$Supplier {
       _$SupplierFromJson(json);
 
   factory Supplier.fromSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     final List<Invoice> invoices = List<Invoice>.from(
-        (doc['invoices']).map((product) => Invoice.fromJson(product)));
+        (data['invoices']).map((product) => Invoice.fromJson(product)));
     return Supplier(
       id: doc.id,
-      name: doc['name'],
-      phoneNumber: doc['phoneNumber'],
-      secPhoneNumber: doc['secPhoneNumber'],
+      name: data['name'],
+      phoneNumber: data['phoneNumber'],
+      secPhoneNumber: data['secPhoneNumber'],
       invoices: invoices,
-      balance: doc['balance'].toDouble(),
+      balance: data['balance'].toDouble(),
     );
   }
 }

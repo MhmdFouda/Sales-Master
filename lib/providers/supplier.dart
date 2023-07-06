@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fouda_pharma/models/supplier.dart';
+import 'package:nimbostratus/nimbostratus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'supplier.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class AsyncSupplier extends _$AsyncSupplier {
   Future<List<Supplier>> _fetchSupplier() async {
     final supplierCollection =
         FirebaseFirestore.instance.collection('suppliers');
-    final querySnapshot = await supplierCollection.get(const GetOptions());
-    final supplierList =
-        querySnapshot.docs.map((doc) => Supplier.fromSnapshot(doc)).toList();
-    return supplierList;
+    final snap = await Nimbostratus.instance.getDocuments(
+      supplierCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return snap.map((doc) => Supplier.fromSnapshot(doc)).toList();
   }
 
   @override
@@ -23,11 +25,13 @@ class AsyncSupplier extends _$AsyncSupplier {
   Future<Supplier> getSupplier(String id) async {
     final supplierCollection =
         FirebaseFirestore.instance.collection('suppliers');
-    final sppliertDoc =
-        await supplierCollection.doc(id).get(const GetOptions());
+    final snap = await Nimbostratus.instance.getDocument(
+      supplierCollection.doc(id),
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
 
-    if (sppliertDoc.exists) {
-      return Supplier.fromSnapshot(sppliertDoc);
+    if (snap.exists) {
+      return Supplier.fromSnapshot(snap);
     } else {
       throw Exception('Supplier not found');
     }
@@ -42,23 +46,50 @@ class AsyncSupplier extends _$AsyncSupplier {
   }
 
   Future<void> addSupplier(Supplier supplier) async {
-    final supplierCollection =
-        FirebaseFirestore.instance.collection('suppliers');
-    final docRef = await supplierCollection.add(supplier.toJson());
-    final id = docRef.id;
-    await docRef.update({'id': id});
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final supplierCollection =
+          FirebaseFirestore.instance.collection('suppliers');
+      await Nimbostratus.instance.addDocument(
+        supplierCollection,
+        supplier.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchSupplier();
+    });
+    ref.invalidateSelf();
   }
 
   Future<void> updateSupplier(Supplier supplier) async {
-    final supplierCollection =
-        FirebaseFirestore.instance.collection('suppliers');
-    await supplierCollection.doc(supplier.id!).update(supplier.toJson());
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final supplierCollection =
+          FirebaseFirestore.instance.collection('suppliers');
+      await Nimbostratus.instance.updateDocument(
+        supplierCollection.doc(supplier.id),
+        supplier.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchSupplier();
+    });
+
+    ref.invalidateSelf();
+    ref.invalidate(getAsyncSupplierProvider(id: supplier.id!));
   }
 
   Future<void> deleteSupplier(String id) async {
-    final supplierCollection =
-        FirebaseFirestore.instance.collection('suppliers');
-    await supplierCollection.doc(id).delete();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final supplierCollection =
+          FirebaseFirestore.instance.collection('suppliers');
+      await Nimbostratus.instance.deleteDocument(
+        supplierCollection.doc(id),
+        deletePolicy: DeletePolicy.cacheAndServer,
+      );
+      return _fetchSupplier();
+    });
+
+    ref.invalidateSelf();
   }
 }
 

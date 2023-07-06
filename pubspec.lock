@@ -589,6 +589,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  nimbostratus:
+    dependency: "direct main"
+    description:
+      name: nimbostratus
+      sha256: "064588749164d112555cfec392bff3ddfdab4c7cc6cbc5b5643c27bac4f08e2f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.8"
   package_config:
     dependency: transitive
     description:
@@ -757,6 +765,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  restate:
+    dependency: transitive
+    description:
+      name: restate
+      sha256: "764a558885082409136bbaaefab39369cbca19067fd8f4844d02888c5082c14c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   riverpod:
     dependency: transitive
     description:

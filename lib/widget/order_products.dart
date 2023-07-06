@@ -143,15 +143,20 @@ class NumBoxOnline extends ConsumerWidget {
               ref
                   .read(asyncOrderProviderProvider.notifier)
                   .updateProductInOrder(
-                    orderId: order!.id!,
+                    order: order!,
                     productId: product.id!,
                     count: value ?? 0,
                   );
-              ref
-                  .read(asyncOrderProviderProvider.notifier)
-                  .updateOrder(order!.copyWith(totalPrice: total));
-              final changeamount = value ?? 0 - product.count;
+
+              final changeamount = value! - product.count;
               final count = data.count + (-changeamount);
+              final totalPrice = total + (changeamount * product.price);
+              ref.read(asyncOrderProviderProvider.notifier).updateOrder(
+                    order!.copyWith(
+                      totalPrice: totalPrice,
+                    ),
+                  );
+
               ref
                   .read(asyncProductsProvider.notifier)
                   .updateProduct(data.copyWith(

@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fouda_pharma/localization/extension.dart';
 import 'package:fouda_pharma/providers/auth.dart';
+import 'package:fouda_pharma/providers/product_provider.dart';
 import 'package:fouda_pharma/screens/all_products.dart';
 import 'package:fouda_pharma/screens/all_clients_page.dart';
 import 'package:fouda_pharma/screens/all_orders.dart';
@@ -11,7 +12,6 @@ import 'package:fouda_pharma/screens/home.dart';
 import 'package:fouda_pharma/screens/setting.dart';
 import 'package:fouda_pharma/screens/all_suppliers.dart';
 import 'package:fouda_pharma/widget/Reusable/darkmod_toggle.dart';
-import 'package:fouda_pharma/widget/charts/analyze_card.dart';
 import 'package:fouda_pharma/widget/window_button.dart';
 import 'package:intl/intl.dart';
 import 'package:nil/nil.dart';
@@ -51,7 +51,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
   @override
   Widget build(BuildContext context) {
     final hourFormat = int.parse(DateFormat('H').format(DateTime.now()));
-    final count = ref.watch(productCountProvider);
+    final count = ref.watch(asyncProductsProvider).valueOrNull?.length ?? 0;
     List<NavigationPaneItem> items = [
       PaneItemSeparator(),
       PaneItem(
@@ -80,7 +80,7 @@ class _NavigationPageState extends ConsumerState<NavigationPage>
           source: FittedBox(
             fit: BoxFit.contain,
             child: Text(
-              count.value.toString(),
+              count.toString(),
             ),
           ),
         ),

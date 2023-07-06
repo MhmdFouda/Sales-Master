@@ -6,7 +6,23 @@ part of 'product_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getAsyncProductHash() => r'294147b6ae853a3571a43384aa412c2ffe8fec74';
+String _$asyncProductsHash() => r'beee359ad50dfbfdd66fee97f1ec9c4e0c1fd5c5';
+
+/// See also [AsyncProducts].
+@ProviderFor(AsyncProducts)
+final asyncProductsProvider =
+    AutoDisposeAsyncNotifierProvider<AsyncProducts, List<Product>>.internal(
+  AsyncProducts.new,
+  name: r'asyncProductsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$asyncProductsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$AsyncProducts = AutoDisposeAsyncNotifier<List<Product>>;
+String _$getAsyncProductHash() => r'4186d7aa1c9ada84c9cfd99ab3f721ed555d322a';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,18 +45,25 @@ class _SystemHash {
   }
 }
 
-typedef GetAsyncProductRef = AutoDisposeFutureProviderRef<Product>;
+abstract class _$GetAsyncProduct
+    extends BuildlessAutoDisposeAsyncNotifier<Product> {
+  late final String id;
 
-/// See also [getAsyncProduct].
-@ProviderFor(getAsyncProduct)
+  FutureOr<Product> build({
+    required String id,
+  });
+}
+
+/// See also [GetAsyncProduct].
+@ProviderFor(GetAsyncProduct)
 const getAsyncProductProvider = GetAsyncProductFamily();
 
-/// See also [getAsyncProduct].
+/// See also [GetAsyncProduct].
 class GetAsyncProductFamily extends Family<AsyncValue<Product>> {
-  /// See also [getAsyncProduct].
+  /// See also [GetAsyncProduct].
   const GetAsyncProductFamily();
 
-  /// See also [getAsyncProduct].
+  /// See also [GetAsyncProduct].
   GetAsyncProductProvider call({
     required String id,
   }) {
@@ -73,16 +96,14 @@ class GetAsyncProductFamily extends Family<AsyncValue<Product>> {
   String? get name => r'getAsyncProductProvider';
 }
 
-/// See also [getAsyncProduct].
-class GetAsyncProductProvider extends AutoDisposeFutureProvider<Product> {
-  /// See also [getAsyncProduct].
+/// See also [GetAsyncProduct].
+class GetAsyncProductProvider
+    extends AutoDisposeAsyncNotifierProviderImpl<GetAsyncProduct, Product> {
+  /// See also [GetAsyncProduct].
   GetAsyncProductProvider({
     required this.id,
   }) : super.internal(
-          (ref) => getAsyncProduct(
-            ref,
-            id: id,
-          ),
+          () => GetAsyncProduct()..id = id,
           from: getAsyncProductProvider,
           name: r'getAsyncProductProvider',
           debugGetCreateSourceHash:
@@ -108,22 +129,14 @@ class GetAsyncProductProvider extends AutoDisposeFutureProvider<Product> {
 
     return _SystemHash.finish(hash);
   }
+
+  @override
+  FutureOr<Product> runNotifierBuild(
+    covariant GetAsyncProduct notifier,
+  ) {
+    return notifier.build(
+      id: id,
+    );
+  }
 }
-
-String _$asyncProductsHash() => r'a516ad51b2ce3b061f101304a6a78934d8df88e4';
-
-/// See also [AsyncProducts].
-@ProviderFor(AsyncProducts)
-final asyncProductsProvider =
-    AsyncNotifierProvider<AsyncProducts, List<Product>>.internal(
-  AsyncProducts.new,
-  name: r'asyncProductsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$asyncProductsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$AsyncProducts = AsyncNotifier<List<Product>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

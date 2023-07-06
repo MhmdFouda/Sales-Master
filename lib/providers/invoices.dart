@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fouda_pharma/models/invoice_model.dart';
+import 'package:nimbostratus/nimbostratus.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'invoices.g.dart';
 
-@Riverpod(keepAlive: false)
+@riverpod
 class AsyncInvoice extends _$AsyncInvoice {
   Future<List<Invoice>> _fetchinvoice({
     required String collectionId,
@@ -14,10 +15,13 @@ class AsyncInvoice extends _$AsyncInvoice {
         .collection(collectionName)
         .doc(collectionId)
         .collection('invoices');
-    final querySnapshot = await invoiceCollection.get(const GetOptions());
-    final invoiceList =
-        querySnapshot.docs.map((doc) => Invoice.fromSnapshot(doc)).toList();
-    return invoiceList;
+
+    final snap = await Nimbostratus.instance.getDocuments(
+      invoiceCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+
+    return snap.map((doc) => Invoice.fromSnapshot(doc)).toList();
   }
 
   @override
@@ -31,20 +35,29 @@ class AsyncInvoice extends _$AsyncInvoice {
     );
   }
 
-  // calculate the total of the invoice.balance
-
   Future<void> addinvoice({
     required Invoice invoice,
     required String collectionId,
     required String collectionName,
   }) async {
-    final invoiceCollection = FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(collectionId)
-        .collection('invoices');
-    final docRef = await invoiceCollection.add(invoice.toJson());
-    final id = docRef.id;
-    await docRef.update({'id': id});
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final invoiceCollection = FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(collectionId)
+          .collection('invoices');
+      await Nimbostratus.instance.addDocument(
+        invoiceCollection,
+        invoice.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchinvoice(
+        collectionId: collectionId,
+        collectionName: collectionName,
+      );
+    });
+
+    ref.invalidateSelf();
   }
 
   Future<void> updateinvoice(
@@ -52,11 +65,23 @@ class AsyncInvoice extends _$AsyncInvoice {
       required String collectionId,
       required String collectionName,
       required String id}) async {
-    final invoiceCollection = FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(collectionId)
-        .collection('invoices');
-    await invoiceCollection.doc(invoice.id!).update(invoice.toJson());
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final invoiceCollection = FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(collectionId)
+          .collection('invoices');
+      await Nimbostratus.instance.updateDocument(
+        invoiceCollection.doc(id),
+        invoice.toJson(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return _fetchinvoice(
+        collectionId: collectionId,
+        collectionName: collectionName,
+      );
+    });
+    ref.invalidateSelf();
   }
 
   Future<void> deleteinvoice({
@@ -64,10 +89,21 @@ class AsyncInvoice extends _$AsyncInvoice {
     required String collectionName,
     required String id,
   }) async {
-    final invoiceCollection = FirebaseFirestore.instance
-        .collection(collectionName)
-        .doc(collectionId)
-        .collection('invoices');
-    await invoiceCollection.doc(id).delete();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final invoiceCollection = FirebaseFirestore.instance
+          .collection(collectionName)
+          .doc(collectionId)
+          .collection('invoices');
+      await Nimbostratus.instance.deleteDocument(
+        invoiceCollection.doc(id),
+        deletePolicy: DeletePolicy.cacheAndServer,
+      );
+      return _fetchinvoice(
+        collectionId: collectionId,
+        collectionName: collectionName,
+      );
+    });
+    ref.invalidateSelf();
   }
 }

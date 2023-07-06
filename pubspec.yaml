@@ -30,10 +30,10 @@ dependencies:
   system_theme: ^2.2.0
   nil: ^1.1.1
   smooth_page_indicator: ^1.1.0
-
   firebase_auth: ^4.6.3
   cloud_firestore: ^4.8.1
   url_launcher: ^6.1.11
+  nimbostratus: ^0.1.8
 
 dev_dependencies:
   flutter_test:

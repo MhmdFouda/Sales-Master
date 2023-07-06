@@ -4,104 +4,171 @@ import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:fouda_pharma/models/client.dart';
 import 'package:fouda_pharma/models/order.dart';
 import 'package:fouda_pharma/models/product.dart';
+import 'package:nimbostratus/nimbostratus.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'order_provider.g.dart';
 
-@Riverpod(keepAlive: true)
+@riverpod
 class AsyncOrderProvider extends _$AsyncOrderProvider {
-  Future<List<Order>> getFirebaseOrderList() async {
+  // get list of all order
+  Future<List<Order>> fetchOrders() async {
     final orderCollection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    final documents = await orderCollection.get(const firestore.GetOptions());
-    final List<Order> orderList = [];
-    for (final doc in documents.docs) {
-      orderList.add(Order.fromSnapshot(doc));
-    }
-    // Sort the data offline
-    orderList.sort((a, b) => b.confirmTime.compareTo(a.confirmTime));
+        firestore.FirebaseFirestore.instance.collection('orders').orderBy(
+              'confirmTime',
+              descending: true,
+            );
+    final snap = await Nimbostratus.instance.getDocuments(
+      orderCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
 
-    // Access the sorted data
-    final List<Order> sortedOrders = orderList;
-    // Use sortedDocs for further processing or display
+    return snap.map((doc) => Order.fromSnapshot(doc)).toList();
+  }
 
-    return sortedOrders;
+  // get filter order by client name
+  Future<List<Order>> fetchFilterOrders(String clientName) async {
+    final orderCollection = firestore.FirebaseFirestore.instance
+        .collection('orders')
+        .where('clientName', isEqualTo: clientName)
+        .orderBy('confirmTime', descending: true);
+    final snap = await Nimbostratus.instance.getDocuments(
+      orderCollection,
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return snap.map((doc) => Order.fromSnapshot(doc)).toList();
   }
 
   @override
   FutureOr<List<Order>> build() async {
-    return getFirebaseOrderList();
+    return fetchOrders();
   }
 
+  // total price of all order
+  double getTotalPrice() {
+    double totalPrice = 0;
+    for (final order in state.value ?? []) {
+      totalPrice += order.totalPrice;
+    }
+    return totalPrice;
+  }
+
+  // get order by id
+  Future<Order> getOrderById(String id) async {
+    final orderCollection =
+        firestore.FirebaseFirestore.instance.collection('orders');
+    final snap = await Nimbostratus.instance.getDocument(
+      orderCollection.doc(id),
+      fetchPolicy: GetFetchPolicy.cacheFirst,
+    );
+    return Order.fromSnapshot(snap);
+  }
+
+  // update list of product inside the order
   Future<void> updateProductInOrder({
-    required String orderId,
+    required Order order,
     required String productId,
     required int count,
   }) async {
-    final orderCollection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    final orderDoc = orderCollection.doc(orderId);
-    final orderSnapshot = await orderDoc.get();
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final orderCollection =
+          firestore.FirebaseFirestore.instance.collection('orders');
 
-    if (orderSnapshot.exists) {
-      final orderData = orderSnapshot.data();
-      final productList = (orderData?['products'] as List<dynamic>)
-          .map((item) => Product.fromJson(item))
-          .toList();
+      final orderSnapshot = await Nimbostratus.instance.getDocument(
+        orderCollection.doc(order.id),
+        fetchPolicy: GetFetchPolicy.cacheFirst,
+      );
 
-      final updatedProductList = productList.map((product) {
-        if (product.id == productId) {
-          return product.copyWith(count: count);
-        } else {
-          return product;
-        }
-      }).toList();
+      if (orderSnapshot.exists) {
+        final orderData = orderSnapshot.data();
+        final productList = (orderData?['products'] as List<dynamic>)
+            .map((item) => Product.fromJson(item))
+            .toList();
 
-      await orderDoc.update({
-        'products':
-            updatedProductList.map((product) => product.toJson()).toList(),
-      });
-    }
-  }
-
-  Future<List<Order>> getFilterdOrderList(String clientName) async {
-    final orderCollection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    final documents = await orderCollection
-        .orderBy('confirmTime', descending: true)
-        .where('clientName', isEqualTo: clientName)
-        .get(const firestore.GetOptions());
-    List<Order> filterdOrderList = [];
-    for (final doc in documents.docs) {
-      filterdOrderList.add(Order.fromSnapshot(doc));
-    }
-    return filterdOrderList;
+        final updatedProductList = productList.map((product) {
+          if (product.id == productId) {
+            return product.copyWith(count: count);
+          } else {
+            return product;
+          }
+        }).toList();
+        await Nimbostratus.instance.updateDocument(
+          orderCollection.doc(order.id),
+          order.copyWith(products: updatedProductList).toMap(),
+          writePolicy: WritePolicy.cacheAndServer,
+        );
+      }
+      return fetchOrders();
+    });
+    ref.invalidateSelf();
+    ref.invalidate(getOrderByIdProvider(id: order.id!));
   }
 
   // update order with id
   Future<void> updateOrder(Order order) async {
-    final collection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    await collection.doc(order.id).update(order.toMap());
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final collection =
+          firestore.FirebaseFirestore.instance.collection('orders');
+      await Nimbostratus.instance.updateDocument(
+        collection.doc(order.id),
+        order.toMap(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return fetchOrders();
+    });
+
+    ref.invalidateSelf();
+    ref.invalidate(getOrderByIdProvider(id: order.id!));
   }
 
+  // add new order
   Future<void> addOrder(Order order) async {
-    final collection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    final docRef = await collection.add(order.toMap());
-    await docRef.update({'id': docRef.id});
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final collection =
+          firestore.FirebaseFirestore.instance.collection('orders');
+      await Nimbostratus.instance.addDocument(
+        collection,
+        order.toMap(),
+        writePolicy: WritePolicy.cacheAndServer,
+      );
+      return fetchOrders();
+    });
+    ref.invalidateSelf();
   }
 
   // delete order with id
-  Future<void> deleteOrder(String id) async {
-    final collection =
-        firestore.FirebaseFirestore.instance.collection('orders');
-    await collection.doc(id).delete();
+  Future<void> deleteOrder(Order order) async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      final collection =
+          firestore.FirebaseFirestore.instance.collection('orders');
+      await Nimbostratus.instance.deleteDocument(
+        collection.doc(order.id),
+        deletePolicy: DeletePolicy.cacheAndServer,
+      );
+      return fetchOrders();
+    });
+
+    ref.invalidateSelf();
+    ref.invalidate(asyncFilterdOrderProvider(order.clientName));
   }
 }
 
-@Riverpod(keepAlive: true)
+@riverpod
+class GetOrderById extends _$GetOrderById {
+  @override
+  Future<Order> build({required String id}) async {
+    final order =
+        ref.watch(asyncOrderProviderProvider.notifier).getOrderById(id);
+    return order;
+  }
+}
+
+@riverpod
 class ClientName extends _$ClientName {
   @override
   Client? build() {
@@ -115,18 +182,12 @@ class ClientName extends _$ClientName {
 }
 
 @riverpod
-FutureOr<List<Order>> asyncFilterdOrder(
-    AsyncFilterdOrderRef ref, String clientName) async {
-  final orderCollection =
-      firestore.FirebaseFirestore.instance.collection('orders');
-  final documents = await orderCollection
-      .where('clientName', isEqualTo: clientName)
-      .orderBy('confirmTime', descending: true)
-      .get(const firestore.GetOptions());
-  List<Order> filterdOrderList = [];
-  for (final doc in documents.docs) {
-    filterdOrderList.add(Order.fromSnapshot(doc));
+class AsyncFilterdOrder extends _$AsyncFilterdOrder {
+  @override
+  Future<List<Order>> build(String clientName) async {
+    final filterOrders = ref
+        .watch(asyncOrderProviderProvider.notifier)
+        .fetchFilterOrders(clientName);
+    return filterOrders;
   }
-
-  return filterdOrderList;
 }
